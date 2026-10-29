@@ -1,13 +1,15 @@
 # Auditoria final — Conecta Soluções
 
-Revisão de entrega · 29/10/2026 (após o **redesign estrutural**, `PROJECT_AUDIT.md` §17) · Escopo: site público,
+Revisão de entrega · 29/10/2026 (após o **redesign estrutural**, a paleta da marca e o login do painel,
+`PROJECT_AUDIT.md` §17 e §18) · Escopo: site público,
 painel `/admin/`, build, testes, GitHub Actions, publicação e documentação.
 
 ## Situação em uma frase
 
 **Redesign estrutural implementado e verificado localmente, mas ainda não pronto para a entrega final ao
 cliente:** as fotografias são ilustrativas (domínio público), os textos novos (selo, características, botões)
-aguardam validação e a proteção da `main` (ruleset) ainda não foi aplicada. Detalhes em
+aguardam validação e o **acesso do painel ainda precisa ser configurado** pelo responsável técnico (token + senha,
+`publicacao.md` §0). Detalhes em
 [§4](#4-pendências-que-impedem-a-entrega-final).
 
 ## 1. Fontes usadas na revisão
@@ -32,7 +34,7 @@ externo.
 | 6   | Painel limitado a textos, imagens e cores | OK               | 85 campos; nenhum controle novo cria, remove ou reordena itens. O redesign só acrescentou indicadores visuais de alteração                                                                                            |
 | 7   | Impossível criar/excluir seções e itens   | OK               | Recusado no painel, no `content:import`, no `validate:publish` e no escopo do PR (testes)                                                                                                                             |
 | 8   | Painel publicado                          | OK               | No endereço público: 88 controles, 13 áreas, prévia com os 21 serviços, status "Igual ao conteúdo publicado", ações habilitadas                                                                                       |
-| 9   | Segurança                                 | OK / **Parcial** | HTML digitado aparece como texto na prévia (0 elementos criados); cor sem contraste recusada; sem segredos no repositório; `npm audit` 0. **Ruleset da `main` ainda não aplicado**                                    |
+| 9   | Segurança                                 | OK / **Parcial** | HTML digitado aparece como texto na prévia (0 elementos criados); cor sem contraste recusada; sem segredos no repositório; `npm audit` 0. Token do painel só cifrado (exceção §7)                                     |
 | 10  | SEO, acessibilidade e performance         | OK               | Lighthouse no build de produção (servidor local): celular 98/100/96/100, desktop 100/100/96/100, CLS 0. Boas práticas 96 só pelo `favicon.ico` ausente                                                                |
 | 11  | Build e testes                            | OK               | `npm run check` (lint + 283 testes + build), `validate:publish`, `docs:schema --check`; no CI, o workflow "Publicar" repetiu tudo e passou                                                                            |
 | 12  | GitHub Pages                              | OK               | Deploy via Actions concluído; `/`, `/admin/`, CSS, fontes, `sitemap.xml` e `robots.txt` respondem 200; URL inexistente responde 404 com a página estilizada (base path correto)                                       |
@@ -61,16 +63,16 @@ externo.
 | ------------------------------------------------- | ------------------------------------------------------------------------------------ | ------------------- |
 | **Fotografias próprias** (hero, mosaico, contato) | As 11 fotos atuais são ilustrativas (CC0/domínio público, `CREDITOS_IMAGENS.md`)     | Cliente             |
 | **Validação dos textos**                          | Selo, 6 características, botões e demais textos foram redigidos a partir do briefing | Cliente             |
-| **Logotipo para fundo escuro** (opcional)         | O logotipo horizontal tem texto azul-marinho; no vinho, usa-se só o símbolo          | Cliente             |
-| **Proteção da `main`**                            | Sem o ruleset, é possível enviar direto para a `main` sem passar pelo PR validado    | Responsável técnico |
+| **Configurar o acesso do painel**                 | Sem token + senha configurados, o painel abre na configuração inicial e não publica  | Responsável técnico |
+| **Senha forte entregue ao cliente**               | O arquivo cifrado é público: senha curta pode ser quebrada offline                   | Responsável técnico |
 
 ## 5. Configuração manual restante
 
 Em `publicacao.md` §3:
 
-1. Aplicar o ruleset:
-   `gh api repos/Tha-github/conectasolucoes/rulesets --method POST --input .github/rulesets/proteger-main.json`.
-   Depois disso, toda mudança (inclusive do responsável técnico) entra por Pull Request.
+1. Configurar o acesso do painel (`publicacao.md` §0): token fine-grained só deste repositório com "Contents: Read
+   and write" e senha longa. **Não** aplicar o ruleset `proteger-main.json` como está: ele exige PR e bloquearia as
+   publicações do painel. Se desejado, proteger a `main` só contra force-push e exclusão.
 2. Restringir o ambiente `github-pages` à `main` e, opcionalmente, exigir aprovação.
 3. Permissões do Actions: somente leitura, sem permissão para criar ou aprovar PRs.
 4. Atualizar as actions fixadas por SHA para versões em Node 24 (o GitHub já avisa que Node 20 está depreciado; hoje
@@ -79,9 +81,11 @@ Em `publicacao.md` §3:
 
 ## 6. Riscos residuais
 
-- **O painel é público e não tem senha**, por decisão consciente (senha em JavaScript seria falsa). Ele só altera o
-  navegador de quem o usa; a autorização real é a do GitHub. Login ou publicação com um clique exigiriam um serviço
-  externo com autenticação, o que depende de nova autorização.
+- **Login do painel = token cifrado pela senha** (exceção autorizada, `CLAUDE.md` §7). O arquivo cifrado é público:
+  quem o baixar pode tentar senhas offline, sem limite. Quem descobrir a senha pode alterar arquivos deste
+  repositório (só ele, sem permissão de workflows). Mitigações: senha longa, token com prazo e escopo mínimos,
+  revogação imediata no GitHub em caso de suspeita, revalidação no CI antes de cada deploy.
+- **Sem proteção de PR na `main`** enquanto o painel publicar direto; o histórico de commits "Painel: …" é o registro.
 - **Sem cabeçalhos HTTP próprios** no GitHub Pages: CSP por `<meta>` (sem `frame-ancestors`), HSTS e `nosniff`
   dependem do GitHub.
 - **`robots.txt` e `sitemap.xml`** num site de projeto ficam em `/conectasolucoes/`, onde os buscadores não os
@@ -97,6 +101,6 @@ Em `publicacao.md` §3:
 | Código, build e testes       | Concluído e verificado (local e CI)                                         |
 | Redesign do site e do painel | Concluído e verificado                                                      |
 | Publicação                   | **Publicado** em https://tha-github.github.io/conectasolucoes/ e verificado |
-| Proteção da `main`           | **Pendente** (ruleset)                                                      |
-| Conteúdo                     | **Pendente**: logotipo, fotos e validação dos textos pelo cliente           |
+| Login e publicação do painel | Implementado e testado com API simulada; **configuração pendente**          |
+| Conteúdo                     | **Pendente**: fotos próprias e validação dos textos pelo cliente            |
 | Entrega ao cliente           | **Não pronta**: depende das pendências do §4                                |

@@ -137,19 +137,13 @@ describe('imagens', () => {
     );
   });
 
-  test('exige texto alternativo nas fotografias; o símbolo ao lado do nome pode ser decorativo', () => {
-    assert.deepEqual(
-      errorsAfter((c) => (c.hero.image.alt = '')),
-      ['hero.image.alt'],
-    );
-    assert.deepEqual(
-      errorsAfter((c) => (c.about.gallery.scada.alt = '  ')),
-      ['about.gallery.scada.alt'],
-    );
-    assert.deepEqual(
-      errorsAfter((c) => (c.brand.logo.alt = '')),
-      [],
-    );
+  test('exige texto alternativo (logotipo e fotografias)', () => {
+    for (const path of ['brand.logo', 'hero.image', 'about.gallery.scada']) {
+      assert.deepEqual(
+        errorsAfter((c) => (path.split('.').reduce((node, key) => node[key], c).alt = '  ')),
+        [`${path}.alt`],
+      );
+    }
   });
 
   test('rejeita propriedade extra na imagem', () => {

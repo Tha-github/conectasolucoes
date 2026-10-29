@@ -763,3 +763,43 @@ horizontal e com cabeçalho de altura constante; painel `/admin/` no navegador (
 selo, HTML digitado exibido como texto); site, painel e página 404 sem erros de console nem recursos com erro;
 Lighthouse no build servido localmente (sem compressão): celular 87/100/100/100 (LCP 3,5 s, CLS 0), desktop
 100/100/100/100.
+
+## 18. Paleta da marca, logotipo e login com publicação pelo painel (29/10/2026)
+
+Pedido do cliente: "colocar login e senha e, quando o cliente alterar algo no painel, alterar o site principal, como
+no site da Weiri"; logotipo onde for necessário e `icone.png` como favicon; vinho → `#086ef7` e marrom → `#1ab3aa`.
+
+**Autorização de arquitetura.** O método da Weiri (token do GitHub cifrado pela senha, dentro do site público)
+contrariava o `CLAUDE.md` §7. As alternativas foram apresentadas (serviço externo com login real, recomendado;
+padrão Weiri; adiar). A responsável escolheu **"igual da Weiri"**. A exceção, com limites, foi registrada no
+`CLAUDE.md` §7 e em `publicacao.md` §0.
+
+**Decisões**
+
+- **Mecanismo** (`src/lib/access.js`, `src/js/admin/{auth,github,publish}.js`): token fine-grained (só este
+  repositório, só Contents) cifrado com AES-256-GCM / PBKDF2-SHA256 (600 mil iterações, sal e IV aleatórios) em
+  `content/acesso.json`; o build valida o formato e o publica em `admin/acesso.json`. Senha mínima de 10 caracteres.
+  Token decifrado só em memória (nunca em `localStorage`, `sessionStorage` ou IndexedDB). Editor oculto até a senha.
+- **Publicação:** um commit atômico (Git Data API) com `content/content.json` e as imagens novas; lista fechada de
+  caminhos; recusa se o conteúdo no GitHub mudou desde que o painel abriu; o painel acompanha o site até a mudança
+  aparecer. O workflow de Pages revalida tudo antes do deploy (conteúdo recusado não vai ao ar).
+- **Diferenças em relação à Weiri:** iterações mínimas não podem ser rebaixadas por um arquivo adulterado; formato do
+  arquivo estrito; caminhos graváveis limitados; detecção de publicação concorrente; CSP do painel libera só
+  `https://api.github.com` em `connect-src`.
+- **Testes do CI desacoplados do conteúdo editável** (logotipo, imagens pendentes): o CI roda os testes sobre o que o
+  painel publicar, e um teste preso a um valor editável bloquearia publicações legítimas.
+- **Ruleset:** `proteger-main.json` exige PR e bloquearia o painel. Não deve ser aplicado como está (`publicacao.md`
+  §0).
+- **Cores:** `#086EF7` como fundo escuro (branco 4,58:1) e `#1AB3AA` como botão/selo/decoração (texto azul-marinho
+  `#00142C` do logotipo, 7,1:1). Texto azul sobre bege em `#0759C9` (`#086EF7` dá 3,9:1); destaque dos títulos
+  sobre azul em branco (verde-água sobre azul dá 1,8:1). Anel de foco no claro passou a usar `accent`; os pares
+  `primary`/fundo saíram de `CONTRAST_PAIRS`.
+- **Marca:** cabeçalho claro com `logotipo-site.png` (cópia reduzida, sem edição); favicon do `icone.png`. O símbolo
+  saiu do hero (metade azul some no fundo azul) e `simbolo.png` foi removido.
+
+**Verificação:** `npm run check` (lint + 312 testes + build), `validate:publish`, `npm audit` (0); teste de ponta a
+ponta no navegador com a API do GitHub **simulada** (configuração inicial com validações, commit do acesso cifrado
+sem o token em claro, publicação com o `content.json` correto, status "Igual ao conteúdo publicado", token ausente
+do armazenamento do navegador, senha errada recusada, senha certa libera o editor, cabeçalho `Authorization` só
+para `api.github.com`). **Não testado:** gravação real no GitHub (exige o token do responsável, que não deve passar
+por esta sessão).

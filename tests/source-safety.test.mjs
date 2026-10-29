@@ -27,16 +27,34 @@ test('nenhum handler inline, javascript: ou script externo nas páginas', () => 
   }
 });
 
-test('nenhum token, chave ou credencial aparente', () => {
-  const secret = /gh[pousr]_[A-Za-z0-9]{20,}|github_pat_|-----BEGIN [A-Z ]*PRIVATE KEY|AKIA[0-9A-Z]{16}/;
+test('nenhum token, chave ou credencial aparente (o token do painel só existe cifrado)', () => {
+  const secret =
+    /gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY|AKIA[0-9A-Z]{16}/;
   for (const file of FILES) {
     assert.doesNotMatch(readFileSync(file, 'utf8'), secret, file);
   }
 });
 
-test('nenhum serviço de terceiros (analytics, CDNs, fontes externas)', () => {
+test('nenhum serviço de terceiros (analytics, CDNs, fontes externas); painel só fala com a API do GitHub', () => {
   const external = /https?:\/\/(?!www\.w3\.org)/;
   for (const file of FILES.filter((f) => /\.(?:html|css)$/.test(f))) {
-    assert.doesNotMatch(readFileSync(file, 'utf8'), external, file);
+    const text = readFileSync(file, 'utf8');
+    // Exceção do CLAUDE.md §7: a CSP do painel libera só api.github.com em connect-src.
+    const allowed = file.endsWith(join('pages', 'admin', 'index.html'))
+      ? text.replace("connect-src 'self' https://api.github.com;", '')
+      : text;
+    assert.doesNotMatch(allowed, external, file);
+  }
+  const jsFiles = FILES.filter((f) => /\.m?js$/.test(f) && f.startsWith(join(ROOT, 'src')));
+  for (const file of jsFiles) {
+    const urls = readFileSync(file, 'utf8').match(/https?:\/\/[^\s'"`)]+/g) ?? [];
+    for (const url of urls) {
+      // API do GitHub (painel), links de envio/WhatsApp, namespaces e exemplos em comentários.
+      assert.match(
+        url,
+        /^(?:https:\/\/(?:api\.github\.com|github\.com\/|wa\.me\/|schema\.org|usuario\.github\.io\/|www\.dominio\.com\.br)|http:\/\/www\.sitemaps\.org\/schemas\/)/,
+        `${file}: ${url}`,
+      );
+    }
   }
 });

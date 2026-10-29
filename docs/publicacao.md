@@ -1,9 +1,56 @@
 # Publicação de conteúdo — Conecta Soluções
 
-Como alterações feitas no painel (`/admin/`) chegam ao site público no GitHub Pages **sem backend próprio**, com
-autorização pela identidade e pelas permissões do GitHub.
+Como alterações feitas no painel (`/admin/`) chegam ao site público no GitHub Pages **sem backend próprio**.
 
-## 1. Análise: por que o painel não grava direto no GitHub
+## 0. Fluxo atual: login e "Publicar no site" (desde 29/10/2026)
+
+Por decisão da responsável pelo projeto, o painel publica direto, no mesmo padrão do site da Weiri. É uma **exceção
+registrada no `CLAUDE.md` §7**; as seções 1 a 4 abaixo descrevem o fluxo anterior (Pull Request), que continua
+funcionando como alternativa e como plano de recuperação.
+
+**Como funciona**
+
+1. O painel pede a **senha**. Com ela, o navegador decifra a chave do GitHub guardada em `content/acesso.json`
+   (publicada em `admin/acesso.json`), cifrada com AES-256-GCM e chave derivada por PBKDF2-SHA256 com 600 mil
+   iterações. A chave decifrada fica só na memória da aba; **Sair** ou fechar a aba a descarta.
+2. **Publicar no site** confere se o `content.json` do GitHub ainda é o que o painel carregou (senão recusa, para não
+   sobrescrever outra publicação) e grava, **num único commit na `main`**, o `content/content.json` e as imagens novas
+   em `src/assets/img/`. O código só aceita esses caminhos (`src/lib/access.js → isPublishablePath`).
+3. O push dispara o workflow **Publicar no GitHub Pages**, que roda `validate:publish`, lint, testes e build antes do
+   deploy. Conteúdo recusado ali **não vai ao ar**: o site continua como estava, e o erro aparece em _Actions_.
+4. O painel consulta o site a cada 15 s e avisa quando a mudança aparece (normalmente em 1 a 3 minutos).
+
+**Configuração (uma vez, pelo responsável técnico)**
+
+1. GitHub → _Settings → Developer settings → Personal access tokens → **Fine-grained tokens** → Generate new token_.
+   - _Token name_: `Painel Conecta Soluções`; _Expiration_: o maior prazo aceito (**anote a data**).
+   - _Repository access_: **Only select repositories** → `conectasolucoes`.
+   - _Repository permissions_: **Contents: Read and write**. Nenhuma outra (sem _Workflows_, sem _Administration_).
+2. Abra `https://tha-github.github.io/conectasolucoes/admin/`. Sem `acesso.json`, aparece a configuração inicial:
+   cole a chave, defina a senha (mínimo de 10 caracteres; use uma frase longa) e confirme. O painel confere a chave,
+   grava o arquivo cifrado no repositório (commit "Painel: configuração do acesso") e entra.
+3. Passe a senha ao cliente por um canal privado. A chave **não precisa ser guardada**: ela já está cifrada no site.
+4. Antes de trabalhar no repositório pelo computador, rode `git pull`: cada publicação do painel é um commit na
+   `main`.
+
+- **Trocar a senha:** no painel, **Trocar senha** (regrava o arquivo cifrado; vale após o próximo deploy).
+- **Chave venceu ou foi revogada:** na tela de senha, **Reconfigurar acesso** e cole uma chave nova.
+- **Suspeita de vazamento da senha:** revogue o token no GitHub **imediatamente** e reconfigure com chave e senha
+  novas. Revogar o token invalida o acesso na hora, mesmo para quem tiver a senha antiga.
+
+**Riscos e limites (honestos)**
+
+- `admin/acesso.json` é público. Quem baixá-lo pode tentar senhas **offline, sem limite de tentativas**. Senha curta
+  ou comum pode ser descoberta; por isso o mínimo de 10 caracteres e a recomendação de frase longa.
+- Quem descobrir a senha consegue o token e, com ele, **alterar arquivos deste repositório** (só ele; sem permissão de
+  workflows). A lista fechada de caminhos protege o uso normal do painel, não um atacante que já tenha o token.
+- O "login" não é autenticação de servidor: não há sessão, bloqueio por tentativas nem registro de acesso. O
+  histórico de commits ("Painel: …") mostra o que foi publicado e quando.
+- **Ruleset da `main`:** o `.github/rulesets/proteger-main.json` (seção 3) exige Pull Request e **bloquearia as
+  publicações do painel**. Não aplique o ruleset como está enquanto este fluxo estiver em uso. Se quiser proteger a
+  `main` contra force-push e exclusão, aplique só essas duas regras.
+
+## 1. Análise: por que o painel não gravava direto no GitHub (fluxo anterior)
 
 | Opção                                              | Por que não serve (sem servidor)                                                                                                                                                                                                                                                                             |
 | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -14,9 +61,9 @@ autorização pela identidade e pelas permissões do GitHub.
 | **CMS Git-based (Decap/Netlify CMS etc.)**         | Para GitHub, dependem de um servidor de autenticação OAuth intermediário (Netlify, serverless próprio). Isso é intermediário externo, não autorizado.                                                                                                                                                        |
 | **GitHub Pages**                                   | Só serve arquivos estáticos. Não executa código, não guarda segredos e não permite cabeçalhos próprios.                                                                                                                                                                                                      |
 
-**Conclusão:** publicação direta segura a partir do navegador exige um componente de servidor ou um intermediário. Isso
-não foi autorizado, então **não foi implementado nenhum atalho**. O painel não tem senha, token, endpoint de login
-nem chamada à API do GitHub.
+**Conclusão (até 29/10/2026):** publicação direta segura a partir do navegador exige um componente de servidor ou um
+intermediário. Em 29/10/2026 a responsável pelo projeto autorizou a exceção descrita na seção 0 (token fine-grained
+cifrado pela senha), conhecendo os riscos acima.
 
 **Fluxo adotado:** o painel faz edição local, prévia e exportação. A autenticação acontece **no próprio github.com**,
 quando a pessoa autorizada abre um Pull Request com a conta dela, que tem 2FA. O CI valida tudo, e a branch `main`

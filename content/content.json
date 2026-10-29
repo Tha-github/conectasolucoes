@@ -9,8 +9,8 @@
     "tagline": "Engenharia, Automação e Sistemas Industriais",
     "region": "Atendimento na Região Norte do Brasil",
     "logo": {
-      "src": "assets/img/simbolo.png",
-      "alt": "",
+      "src": "assets/img/logotipo-site.png",
+      "alt": "Conecta Soluções",
       "focus": "center"
     }
   },
@@ -252,17 +252,17 @@
       "background": "#F2EDE3",
       "surface": "#FBF8F2",
       "surfaceAlt": "#E8DFD0",
-      "text": "#2A1519",
-      "textMuted": "#5F4A4E",
+      "text": "#00142C",
+      "textMuted": "#4A5568",
       "border": "#DDD3C4",
-      "borderStrong": "#8B7B70",
-      "primary": "#9A6A3C",
-      "onPrimary": "#FFFFFF",
-      "accent": "#6B1230",
-      "dark": "#49091D",
+      "borderStrong": "#7A8494",
+      "primary": "#1AB3AA",
+      "onPrimary": "#00142C",
+      "accent": "#0759C9",
+      "dark": "#086EF7",
       "onDark": "#FFFFFF",
-      "onDarkMuted": "#E3CFCF",
-      "accentOnDark": "#D9AE7E"
+      "onDarkMuted": "#FFFFFF",
+      "accentOnDark": "#FFFFFF"
     }
   }
 }

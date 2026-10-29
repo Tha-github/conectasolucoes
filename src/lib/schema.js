@@ -107,11 +107,11 @@ export const CONTRAST_PAIRS = Object.freeze([
   ['onDark', 'dark', MIN_CONTRAST_TEXT],
   ['onDarkMuted', 'dark', MIN_CONTRAST_TEXT],
   ['accentOnDark', 'dark', MIN_CONTRAST_TEXT],
-  // Bordas de campos, botões e anel de foco.
+  // Bordas de campos e botões. O anel de foco usa `accent` no claro (já ≥ 4,5
+  // acima) e `accentOnDark` no escuro; `primary` é fundo de botão com texto
+  // `onPrimary`, então não precisa contrastar com a página.
   ['borderStrong', 'background', MIN_CONTRAST_UI],
   ['borderStrong', 'surface', MIN_CONTRAST_UI],
-  ['primary', 'background', MIN_CONTRAST_UI],
-  ['primary', 'surface', MIN_CONTRAST_UI],
 ]);
 
 /**
@@ -199,17 +199,15 @@ export const contentSchema = object('Conteúdo', {
     name: text('Nome da empresa', 40),
     tagline: text('Área de atuação (rodapé)', 80),
     region: text('Região de atendimento (rodapé)', 60),
-    // Símbolo da marca, exibido ao lado do nome em texto (cabeçalho e destaque).
-    // O nome visível já identifica a marca: texto alternativo vazio = decorativo.
-    // SVG só pelo repositório (validado no CI); o painel envia apenas formatos raster.
-    logo: image('Símbolo da marca (ao lado do nome)', {
+    // Logotipo horizontal do cabeçalho (fundo claro). SVG só pelo repositório
+    // (validado no CI); o painel envia apenas formatos raster.
+    logo: image('Logotipo (cabeçalho)', {
       formats: ['svg', 'png', 'webp', 'avif'],
       maxBytes: 200_000,
       minWidth: 120,
       minHeight: 32,
       maxWidth: 2000,
       maxHeight: 1000,
-      altRequired: false,
       altMaxLength: 60,
       target: { width: 800, height: 400 },
     }),
@@ -378,13 +376,13 @@ export const contentSchema = object('Conteúdo', {
       textMuted: color('Texto secundário'),
       border: color('Divisórias'),
       borderStrong: color('Bordas de controles'),
-      primary: color('Cor de ação (botões, foco)'),
+      primary: color('Cor de ação (botões, selo e detalhes)'),
       onPrimary: color('Texto sobre a cor de ação'),
-      accent: color('Destaque claro (vinho: títulos em destaque, ícones)'),
-      dark: color('Fundo escuro (vinho: destaque, atuação, rodapé)'),
+      accent: color('Destaque no claro (títulos, ícones, foco)'),
+      dark: color('Fundo de destaque (hero, atuação, rodapé)'),
       onDark: color('Texto sobre fundo escuro'),
       onDarkMuted: color('Texto secundário sobre fundo escuro'),
-      accentOnDark: color('Destaque sobre fundo escuro (dourado dos títulos)'),
+      accentOnDark: color('Destaque sobre fundo escuro (títulos, foco)'),
     }),
   }),
 });

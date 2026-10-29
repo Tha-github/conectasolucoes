@@ -101,6 +101,67 @@
   color: var(--color-warning);
 }
 
+/* ---------- Acesso (senha / configuração inicial) ---------- */
+
+.admin-auth {
+  display: grid;
+  place-items: center;
+  padding: var(--space-9) var(--gutter);
+}
+
+.admin-auth__card {
+  display: grid;
+  gap: var(--space-5);
+  width: min(30rem, 100%);
+  padding: clamp(var(--space-5), 1rem + 2vw, var(--space-7));
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--line);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+}
+
+.admin-auth__title {
+  font-size: var(--text-2xl);
+}
+
+.admin-auth__form {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.admin-auth__intro {
+  color: var(--fg-muted);
+  font-size: var(--text-sm);
+}
+
+.admin-auth__status {
+  padding: var(--space-3) var(--space-4);
+  border-left: var(--border-width-strong) solid var(--line-strong);
+  background: var(--color-surface-alt);
+  font-size: var(--text-sm);
+}
+
+.admin-auth__status[data-kind='error'] {
+  border-left-color: var(--color-error);
+  color: var(--color-error);
+  font-weight: var(--weight-semibold);
+}
+
+.admin-auth__link {
+  justify-self: start;
+  min-height: var(--control-height-sm);
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--fg);
+  font: inherit;
+  font-size: var(--text-sm);
+  text-decoration: underline;
+  text-decoration-color: var(--accent-fg);
+  text-underline-offset: 0.22em;
+  cursor: pointer;
+}
+
 /* ---------- Avisos fixos ---------- */
 
 .admin-notice {

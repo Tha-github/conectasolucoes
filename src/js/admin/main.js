@@ -1,6 +1,7 @@
-// Painel de conteúdo (estático). Edita apenas valores do schema, mostra a
-// prévia, salva rascunho NESTE navegador e exporta/importa JSON validado.
-// Não publica nada, não chama serviços externos e não guarda credenciais.
+// Painel de conteúdo. Edita apenas valores do schema, mostra a prévia, salva
+// rascunho NESTE navegador, exporta/importa JSON validado e, depois do login,
+// publica no repositório (exceção do CLAUDE.md §7: token cifrado pela senha,
+// ver lib/access.js). O token decifrado fica só na memória desta aba.
 
 import {
   changedPaths,
@@ -14,7 +15,7 @@ import { resolveWithDefaults } from '../../lib/defaults.js';
 import { renderPreview, themeCss } from '../../lib/preview.js';
 import { IMAGE_PATH_PATTERN, walkSchema } from '../../lib/schema.js';
 import { githubUploadUrl } from '../../lib/site.js';
-import { loadDraft, saveDraft } from '../../lib/storage.js';
+import { clearDraft, loadDraft, saveDraft } from '../../lib/storage.js';
 import { exportContent, exportFileName, importContent } from '../../lib/transfer.js';
 import {
   MAX_CONTENT_JSON_LENGTH,
@@ -23,7 +24,10 @@ import {
   validateContent,
   validateField,
 } from '../../lib/validate.js';
+import { changePassword, requireAccess } from './auth.js';
 import { confirmDialog } from './dialog.js';
+import { describeGitHubError } from './github.js';
+import { publishContent, waitForSite } from './publish.js';
 import { createForm } from './form.js';
 import { createImageStore } from './image-store.js';
 import { confirmImage, processImage } from './image-editor.js';
@@ -46,6 +50,10 @@ const state = {
   localImages: new Map(),
   storage: /** @type {Storage | null} */ (null),
   imageStore: /** @type {Awaited<ReturnType<typeof createImageStore>> | null} */ (null),
+  /** Sessão destravada pela senha (só em memória). */
+  session: /** @type {{ github: ReturnType<typeof import('./github.js').createGitHub>, token: string } | null} */ (
+    null
+  ),
 };
 
 /* ---------- Utilidades ---------- */
@@ -368,6 +376,116 @@ function doExport() {
 
 const hasWork = () => changedPaths(state.draft, state.published).length > 0;
 
+/* ---------- Publicação ---------- */
+
+let publishing = false;
+
+function setPublishing(busy) {
+  publishing = busy;
+  const button = $('[data-action="publish"]');
+  button.toggleAttribute('disabled', busy);
+  button.textContent = busy ? 'Publicando…' : 'Publicar no site';
+  $('#busy').textContent = busy ? 'Publicando no site…' : '';
+}
+
+async function publish() {
+  if (publishing || !state.session || !requireValid('publicar')) return;
+  if (contrastErrors(state.draft.theme.colors).length > 0) return;
+  if (!hasWork()) {
+    showMessage('info', 'Nada para publicar: o rascunho é igual ao site.');
+    return;
+  }
+  const choice = await confirmDialog($('#confirm-dialog'), {
+    title: 'Publicar no site?',
+    text: `${changedPaths(state.draft, state.published).length} campo(s) alterado(s) vão para o site, para todos os visitantes, em 1 a 3 minutos.`,
+    confirmLabel: 'Publicar agora',
+    offerExport: false,
+  });
+  if (choice !== 'confirm') return;
+
+  setPublishing(true);
+  try {
+    const sources = referencedLocalImages();
+    const result = await publishContent(state.session.github, {
+      draft: state.draft,
+      published: state.published,
+      images: sources.map((src) => ({ src, blob: state.localImages.get(src).blob })),
+    });
+    if (!result.ok) {
+      showMessage(
+        'warning',
+        'O conteúdo no GitHub mudou depois que este painel foi aberto (outra publicação em andamento ou feita em outro lugar). Nada foi publicado. Salve ou exporte o rascunho, aguarde alguns minutos, recarregue a página e refaça as alterações.',
+        { actions: [{ label: 'Exportar JSON', onClick: doExport }] },
+      );
+      return;
+    }
+    state.published = clone(state.draft);
+    for (const src of sources) {
+      state.siteImages.add(src);
+      await state.imageStore.remove(src).catch(() => {});
+    }
+    clearDraft(state.storage);
+    state.saved = null;
+    refreshAll();
+    showMessage(
+      'success',
+      'Enviado. O GitHub está validando e atualizando o site (1 a 3 minutos). Este aviso muda quando terminar.',
+    );
+    waitForSite(`${ROOT}content/content.json`, result.json).then((live) =>
+      live
+        ? showMessage('success', 'Pronto: as alterações já aparecem no site para todos os visitantes.')
+        : showMessage(
+            'warning',
+            'As alterações ainda não apareceram no site. Pode haver fila no GitHub ou a validação automática recusou o conteúdo (o site continua como estava). Se em 10 minutos nada mudar, avise o responsável técnico (aba Actions do repositório).',
+          ),
+    );
+  } catch (error) {
+    showMessage('error', describeGitHubError(error));
+  } finally {
+    setPublishing(false);
+  }
+}
+
+/* ---------- Conta ---------- */
+
+function openPasswordDialog() {
+  const dialog = /** @type {HTMLDialogElement} */ ($('#password-dialog'));
+  const formEl = /** @type {HTMLFormElement} */ ($('#form-password'));
+  formEl.reset();
+  for (const error of formEl.querySelectorAll('.field__message')) error.hidden = true;
+  dialog.showModal();
+}
+
+function setupPasswordDialog() {
+  const dialog = /** @type {HTMLDialogElement} */ ($('#password-dialog'));
+  const formEl = /** @type {HTMLFormElement} */ ($('#form-password'));
+  const fieldError = (input, message) => {
+    input.setAttribute('aria-invalid', String(Boolean(message)));
+    const error = document.getElementById(`${input.id}-erro`);
+    error.textContent = message ?? '';
+    error.hidden = !message;
+  };
+  dialog.querySelector('[data-password-choice="cancel"]').addEventListener('click', () => dialog.close());
+  formEl.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const next = /** @type {HTMLInputElement} */ (formEl.elements.namedItem('nova-senha'));
+    const again = /** @type {HTMLInputElement} */ (formEl.elements.namedItem('confirmar-senha'));
+    const confirmError = next.value === again.value ? null : 'As senhas não conferem.';
+    fieldError(again, confirmError);
+    if (confirmError) return;
+    try {
+      await changePassword(state.session.github, state.session.token, next.value);
+      dialog.close();
+      showMessage(
+        'success',
+        'Senha trocada. Ela vale nas próximas entradas, depois que o site for atualizado (1 a 3 minutos).',
+      );
+    } catch (error) {
+      fieldError(next, error instanceof Error && !('status' in error) ? error.message : describeGitHubError(error));
+    }
+  });
+}
+
 /** Pergunta antes de descartar o conteúdo do editor; oferece exportar antes. */
 async function confirmReplace(title, text, confirmLabel) {
   if (!hasWork()) return true;
@@ -557,6 +675,15 @@ async function init() {
   for (const image of Array.isArray(manifest?.images) ? manifest.images : []) {
     if (typeof image?.src === 'string' && IMAGE_PATH_PATTERN.test(image.src)) state.siteImages.add(image.src);
   }
+  // Só depois da senha o editor aparece (o token fica em memória, nesta aba).
+  const waiting = document.createElement('li');
+  waiting.className = 'admin-status__item';
+  waiting.textContent = 'Aguardando acesso';
+  $('#status').replaceChildren(waiting);
+  state.session = await requireAccess();
+  for (const id of ['panel', 'panel-actions', 'panel-notice', 'como-publicar'])
+    document.getElementById(id).hidden = false;
+
   state.storage = safeLocalStorage();
   state.imageStore = await createImageStore();
 
@@ -603,7 +730,14 @@ async function init() {
   }
 
   for (const button of document.querySelectorAll('[data-action]')) button.removeAttribute('disabled');
+  $('[data-action="publish"]').addEventListener('click', publish);
   $('[data-action="save"]').addEventListener('click', save);
+  $('[data-action="password"]').addEventListener('click', openPasswordDialog);
+  $('[data-action="logout"]').addEventListener('click', () => {
+    state.session = null;
+    window.location.reload();
+  });
+  setupPasswordDialog();
   $('[data-action="export"]').addEventListener('click', doExport);
   $('[data-action="reset"]').addEventListener('click', resetToPublished);
   const importInput = /** @type {HTMLInputElement} */ ($('#import-file'));

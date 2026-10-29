@@ -5,12 +5,12 @@ trocada.
 
 ## Marca (arquivos do cliente)
 
-| Arquivo em `src/assets/img/` | Origem                                    | Uso no site                                                        |
-| ---------------------------- | ----------------------------------------- | ------------------------------------------------------------------ |
-| `logotipo.png` (1504×551)    | Enviado pelo cliente em 29/10/2026        | Nenhum por enquanto: texto azul-marinho ilegível sobre fundo vinho |
-| `icone.png` (450×479)        | Enviado pelo cliente em 29/10/2026        | Original preservado; base das duas cópias abaixo                   |
-| `simbolo.png` (150×160)      | Cópia reduzida de `icone.png`, sem edição | Cabeçalho e hero (`brand.logo`), ao lado do nome em texto          |
-| `../favicon.png` (192×192)   | `icone.png` reduzido, margem transparente | Ícone da aba e atalho no celular                                   |
+| Arquivo em `src/assets/img/`  | Origem                                                | Uso no site                                                   |
+| ----------------------------- | ----------------------------------------------------- | ------------------------------------------------------------- |
+| `logotipo.png` (1504×551)     | Enviado pelo cliente em 29/10/2026                    | Original preservado; base da cópia abaixo                     |
+| `logotipo-site.png` (375×112) | `logotipo.png` sem as margens transparentes, reduzido | Cabeçalho do site e da página 404 (`brand.logo`), fundo claro |
+| `icone.png` (450×479)         | Enviado pelo cliente em 29/10/2026                    | Original preservado; base do favicon                          |
+| `../favicon.png` (192×192)    | `icone.png` reduzido, com margem transparente         | Ícone da aba (site e painel) e atalho no celular              |
 
 Nenhum arquivo da marca foi redesenhado nem recolorido.
 

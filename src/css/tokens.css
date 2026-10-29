@@ -106,9 +106,9 @@
   --border-width-strong: 2px;
 
   /* Sombras: uso mínimo; a hierarquia vem de linhas e espaço */
-  --shadow-sm: 0 1px 2px rgb(42 21 25 / 0.08);
-  --shadow-md: 0 8px 24px rgb(42 21 25 / 0.1);
-  --shadow-lg: 0 24px 64px rgb(42 21 25 / 0.22);
+  --shadow-sm: 0 1px 2px rgb(0 20 44 / 0.08);
+  --shadow-md: 0 8px 24px rgb(0 20 44 / 0.1);
+  --shadow-lg: 0 24px 64px rgb(0 20 44 / 0.24);
 
   /* Controles (alvo mínimo de toque 44px) */
   --control-height: 3rem;
@@ -173,13 +173,12 @@
   --heading-accent: var(--color-accent);
   --action-bg: var(--color-primary);
   --action-fg: var(--color-on-primary);
-  --focus-color: var(--color-primary);
+  --focus-color: var(--color-accent);
 }
 
-/* Contexto escuro (vinho): hero, atuação, cartões, cabeçalho e rodapé.
-   O botão principal continua dourado (onPrimary sobre primary, validado). */
-.theme-dark,
-.site-header {
+/* Contexto escuro (azul da marca): hero, atuação, cartões e rodapé.
+   O botão principal continua verde-água (onPrimary sobre primary, validado). */
+.theme-dark {
   --bg: var(--color-dark);
   --bg-raised: color-mix(in srgb, var(--color-on-dark) 6%, var(--color-dark));
   --bg-sunken: color-mix(in srgb, var(--color-on-dark) 3%, var(--color-dark));

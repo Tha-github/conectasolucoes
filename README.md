@@ -78,9 +78,15 @@ Se o arquivo não existir, o build falha. Se `src` for `null`, a página mostra 
 Se a imagem falhar ao carregar no navegador, `js/media-fallback.js` faz a mesma substituição.
 
 As fotografias atuais (hero, mosaico e contato) são de domínio público ou CC0; fonte, autor e licença de cada uma estão
-em [`docs/CREDITOS_IMAGENS.md`](docs/CREDITOS_IMAGENS.md). O símbolo da marca (`simbolo.png`, cópia reduzida do
-`icone.png` enviado pelo cliente) aparece ao lado do nome em texto; o logotipo horizontal original (`logotipo.png`)
-está versionado, sem uso no site, porque o texto azul-marinho não é legível sobre o fundo vinho.
+em [`docs/CREDITOS_IMAGENS.md`](docs/CREDITOS_IMAGENS.md). O cabeçalho usa o logotipo oficial
+(`logotipo-site.png`, cópia reduzida do `logotipo.png` enviado pelo cliente) e o favicon vem do `icone.png`.
+
+### Login e publicação pelo painel
+
+O painel `/admin/` pede senha e publica direto no repositório (exceção autorizada no `CLAUDE.md` §7: token
+fine-grained cifrado pela senha em `content/acesso.json`). Configuração, funcionamento e riscos em
+[`docs/publicacao.md`](docs/publicacao.md) §0. Cada publicação é um commit "Painel: …" na `main`: rode `git pull`
+antes de trabalhar localmente.
 
 ## Publicação no GitHub Pages
 

@@ -1,12 +1,12 @@
 /*
  * Seções da página inicial, na ordem do inventário aprovado
  * (PROJECT_AUDIT §9): hero, empresa, serviços, abordagem, atuação, contato.
- * Composição alternando vinho (theme-dark) e bege, em faixas horizontais.
+ * Composição alternando azul da marca (theme-dark) e bege, em faixas horizontais.
  * Molduras de imagem espelhadas em src/lib/schema.js (frames).
  */
 
 /* ---------- Geometria decorativa (partials/geometry.html) ----------
- * Planos diagonais em tons próximos ao fundo e filetes dourados de baixo
+ * Planos diagonais em tons próximos ao fundo e filetes verde-água de baixo
  * contraste. Puramente decorativa (aria-hidden), atrás do conteúdo.
  */
 
@@ -28,25 +28,25 @@
 }
 
 .geometry__band {
-  fill: color-mix(in srgb, var(--color-accent-on-dark) 9%, var(--color-dark));
+  fill: color-mix(in srgb, var(--color-primary) 14%, var(--color-dark));
 }
 
 .geometry__line {
-  stroke: color-mix(in srgb, var(--color-accent-on-dark) 45%, var(--color-dark));
+  stroke: color-mix(in srgb, var(--color-primary) 70%, var(--color-dark));
   stroke-width: 1.25;
   vector-effect: non-scaling-stroke;
 }
 
 .geometry__line--faint {
-  stroke: color-mix(in srgb, var(--color-accent-on-dark) 22%, var(--color-dark));
+  stroke: color-mix(in srgb, var(--color-primary) 40%, var(--color-dark));
 }
 
 /* ---------- Hero ----------
  * Desktop: texto em ~45% à esquerda; à direita, composição em camadas:
- *   1. geometria diagonal do fundo; 2. moldura dourada inclinada;
+ *   1. geometria diagonal do fundo; 2. moldura verde-água inclinada;
  *   3. fotografia principal em recorte vertical com aresta diagonal;
  *   4. fotografia em primeiro plano, no canto inferior direito;
- *   5. selo circular dourado sobre a composição.
+ *   5. selo circular verde-água sobre a composição.
  * Celular e tablet: a mesma composição, proporcional, abaixo do texto.
  * As medidas internas usam unidades de contêiner (cqi), então a composição
  * escala junto com a largura disponível, sem sobreposição com o texto.
@@ -74,27 +74,14 @@
   gap: var(--space-5);
 }
 
-/* Símbolo da marca à esquerda do nome e do rótulo, como um bloco de assinatura */
+/* Assinatura: nome da marca e área de atuação (o logotipo fica no cabeçalho claro) */
 .hero__brand {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
-  gap: var(--space-1) var(--space-4);
+  gap: var(--space-1);
   margin-bottom: var(--space-3);
 }
 
-.hero__brand-mark {
-  grid-row: span 2;
-  width: auto;
-  height: clamp(3rem, 2.5rem + 1.5vw, 4rem);
-}
-
-.hero__brand-mark.media-fallback {
-  display: none;
-}
-
 .hero__brand-name {
-  align-self: end;
   color: var(--fg);
   font-family: var(--font-display);
   font-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.5rem);
@@ -104,7 +91,6 @@
 }
 
 .hero__brand-tag {
-  align-self: start;
   color: var(--accent-fg);
   font-size: var(--text-2xs);
   font-weight: var(--weight-semibold);
@@ -160,7 +146,7 @@
   bottom: 0;
   left: 13%;
   right: 24%;
-  border: var(--border-width) solid color-mix(in srgb, var(--color-accent-on-dark) 55%, var(--color-dark));
+  border: var(--border-width) solid color-mix(in srgb, var(--color-primary) 80%, var(--color-dark));
   border-bottom: 0;
   border-radius: 3.5cqi 3.5cqi 0 0;
   transform: skewX(-12deg);
@@ -463,7 +449,7 @@
   }
 }
 
-/* ---------- Abordagem: título à esquerda, cartões vinho em 2 × 2 ---------- */
+/* ---------- Abordagem: título à esquerda, cartões azuis em 2 × 2 ---------- */
 
 .approach__grid {
   display: grid;
@@ -513,11 +499,11 @@
   place-items: center;
   aspect-ratio: 1;
   border-radius: var(--radius-lg);
-  background: color-mix(in srgb, var(--color-accent-on-dark) 16%, var(--color-dark));
-  color: var(--accent-fg);
+  background: var(--color-primary);
+  color: var(--color-on-primary);
   font-family: var(--font-display);
   font-size: 1.75rem;
-  font-weight: var(--weight-light);
+  font-weight: var(--weight-medium);
   font-variant-numeric: lining-nums;
 }
 
@@ -542,7 +528,7 @@
   }
 }
 
-/* ---------- Área de atuação: vinho, texto à esquerda, rosa dos ventos ---------- */
+/* ---------- Área de atuação: azul, texto à esquerda, rosa dos ventos ---------- */
 
 .area {
   position: relative;
@@ -585,7 +571,7 @@
 }
 
 .area__ring {
-  stroke: color-mix(in srgb, var(--color-accent-on-dark) 45%, var(--color-dark));
+  stroke: color-mix(in srgb, var(--color-primary) 70%, var(--color-dark));
   stroke-width: 1;
 }
 
@@ -594,12 +580,12 @@
 }
 
 .area__needle {
-  fill: var(--color-accent-on-dark);
+  fill: var(--color-primary);
 }
 
 .area__needle--outline {
   fill: none;
-  stroke: var(--color-accent-on-dark);
+  stroke: var(--color-primary);
   stroke-width: 1.5;
 }
 

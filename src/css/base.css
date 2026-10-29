@@ -45,7 +45,7 @@ main {
   display: none !important;
 }
 
-/* Títulos: Outfit leve, na cor de título do contexto (vinho no claro, branco no escuro) */
+/* Títulos: Outfit leve, na cor de título do contexto (azul no claro, branco no escuro) */
 h1,
 h2,
 h3,
@@ -59,7 +59,7 @@ h4 {
   text-wrap: balance;
 }
 
-/* Parte em destaque do título: mais pesada e, no escuro, dourada (não depende só da cor) */
+/* Parte em destaque do título: mais pesada (não depende só da cor) */
 .title-accent {
   color: var(--heading-accent);
   font-weight: var(--weight-accent);

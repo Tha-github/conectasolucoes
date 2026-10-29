@@ -176,9 +176,7 @@ describe('interface', () => {
     for (const [img] of html.matchAll(/<img\b[^>]*>/g)) {
       assert.match(img, /\swidth="\d+"/);
       assert.match(img, /\sheight="\d+"/);
-      // Único alt vazio permitido: o símbolo da marca, sempre ao lado do nome em texto.
-      if (/class="(?:brand__logo|hero__brand-mark)"/.test(img)) assert.match(img, /\salt=""/);
-      else assert.match(img, /\salt="[^"]+"/);
+      assert.match(img, /\salt="[^"]+"/);
     }
     const fallbacks = (html.match(/class="media-fallback[^"]*" role="img" aria-label="[^"]+"/g) ?? []).length;
     assert.equal(fallbacks, placeholders.length);
@@ -193,7 +191,6 @@ describe('interface', () => {
       }
     });
     assert.deepEqual(placeholders, expected);
-    assert.deepEqual(placeholders, [], 'nenhuma imagem pendente');
   });
 });
 

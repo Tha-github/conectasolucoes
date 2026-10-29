@@ -99,6 +99,14 @@ O fluxo estritamente estático deve permitir edição, prévia, rascunho local e
 
 Se o cliente exigir autenticação real ou publicação remota automática, explique que isso exige um serviço confiável externo ou backend e aguarde autorização antes de alterar a arquitetura.
 
+### Exceção autorizada (29/10/2026): login e publicação pelo painel, padrão "Weiri"
+Autorizada explicitamente pela responsável pelo projeto depois de apresentadas as alternativas e os riscos. Substitui, **só para este mecanismo**, as proibições de token no front-end e de escrita direta no repositório:
+- O token é **fine-grained**, restrito a este repositório e só com "Contents: Read and write" (sem Workflows, Administration ou outros).
+- Ele fica em `content/acesso.json` **apenas cifrado** com a senha do painel (AES-256-GCM, PBKDF2-SHA256 com ≥ 600 mil iterações, sal e IV aleatórios). Nunca em claro no código, no repositório, no bundle ou no armazenamento do navegador; decifrado só na memória da aba.
+- Senha mínima de 10 caracteres. O arquivo cifrado é público: senha fraca pode ser quebrada offline. Documentar isso para o cliente.
+- O painel só grava `content/content.json`, `content/acesso.json` e imagens raster em `src/assets/img/` (lista fechada em `src/lib/access.js`), num único commit na `main`. O workflow de publicação revalida tudo (`validate:publish`, testes, build) antes do deploy.
+- Ninguém deve afirmar que o login é autenticação de servidor: é cifra do token por senha. Qualquer ampliação (outras permissões, outros caminhos, outros repositórios) exige nova autorização.
+
 ## 8. Segurança
 - Trate conteúdo importado, `localStorage`, arquivos e URLs como entrada não confiável.
 - Use schema estrito, rejeite propriedades desconhecidas e valide tipos, tamanho e limites.

@@ -327,19 +327,22 @@ describe('prévia e página do painel', () => {
     );
   });
 
-  test('página do painel: noindex, CSP restrita, sem senha, sem recursos externos', () => {
+  test('página do painel: noindex, CSP restrita (só api.github.com), login antes do editor', () => {
     const html = readFileSync(join(outDir, 'admin', 'index.html'), 'utf8');
     assert.match(html, /<meta name="robots" content="noindex, nofollow">/);
     const csp = html.match(/Content-Security-Policy" content="([^"]+)"/)[1];
-    assert.doesNotMatch(csp, /unsafe-|\*|https?:/);
+    assert.doesNotMatch(csp, /unsafe-|\*/);
     assert.match(csp, /script-src 'self'/);
-    assert.match(csp, /connect-src 'self'/);
-    // Sem campo de senha nem credenciais (padrões de token do GitHub, Authorization etc.).
-    assert.doesNotMatch(
-      html,
-      /type="password"|\bsenha\s*[:=]|access[_-]?token|gh[pousr]_[A-Za-z0-9]{20,}|github_pat_|authorization/i,
-    );
-    assert.doesNotMatch(html, /https?:\/\//);
+    // Exceção do CLAUDE.md §7: única origem externa é a API do GitHub, só em connect-src.
+    assert.match(csp, /connect-src 'self' https:\/\/api\.github\.com;/);
+    assert.deepEqual(csp.match(/https?:\/\/[^\s;]+/g), ['https://api.github.com']);
+    assert.doesNotMatch(html, /gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}/);
+    // Editor, ações e ajuda começam ocultos; só a tela de acesso aparece.
+    for (const id of ['panel', 'panel-actions', 'panel-notice', 'como-publicar']) {
+      assert.match(html, new RegExp(`id="${id}"[^>]*\\shidden`), id);
+    }
+    assert.match(html, /<input[^>]*id="login-senha"[^>]*type="password"[^>]*autocomplete="current-password"/);
+    assert.match(html, /<input[^>]*id="setup-token"[^>]*type="password"[^>]*autocomplete="off"/);
     assert.match(html, /sandbox="allow-same-origin"/, 'prévia sem scripts');
     assert.doesNotMatch(html, /sandbox="[^"]*allow-scripts/);
   });
@@ -347,21 +350,30 @@ describe('prévia e página do painel', () => {
   test('todo botão do painel tem type e ação implementada', () => {
     const html = readFileSync(join(outDir, 'admin', 'index.html'), 'utf8');
     const main = readFileSync(join(ROOT, 'src', 'js', 'admin', 'main.js'), 'utf8');
-    for (const [button] of html.matchAll(/<button\b[^>]*>/g)) assert.match(button, /type="button"/);
+    for (const [button] of html.matchAll(/<button\b[^>]*>/g)) assert.match(button, /type="(?:button|submit)"/);
     for (const [, action] of html.matchAll(/data-action="([^"]+)"/g)) {
       assert.ok(main.includes(`[data-action="${action}"]`), `ação sem handler: ${action}`);
     }
   });
 
-  test('scripts do painel: só requisições relativas, sem credenciais nem armazenamento além do rascunho', () => {
+  test('scripts do painel: rede só para o próprio site e api.github.com; token nunca vai para armazenamento', () => {
     const dir = join(ROOT, 'src', 'js', 'admin');
     for (const file of readdirSync(dir)) {
       const code = readFileSync(join(dir, file), 'utf8');
-      assert.doesNotMatch(code, /https?:\/\/|api\.github\.com|Authorization|Bearer|password|sessionStorage/i, file);
+      assert.doesNotMatch(code, /sessionStorage|document\.cookie/i, file);
+      // Só github.js conhece a API e monta o cabeçalho Authorization.
+      if (file !== 'github.js') assert.doesNotMatch(code, /https?:\/\/|api\.github\.com|Authorization|Bearer/i, file);
+      // Nenhum caminho grava a sessão ou o token no navegador.
+      assert.doesNotMatch(code, /(?:localStorage|setItem|imageStore\.put)\([^)]*token/i, file);
       for (const [, arg] of code.matchAll(/fetch(?:Text)?\(\s*([^,)]+)/g)) {
-        assert.doesNotMatch(arg, /^['"`](?:https?:|\/\/)/, `${file}: ${arg}`);
+        if (file === 'github.js') assert.equal(arg.trim(), 'API + path', `${file}: ${arg}`);
+        else assert.doesNotMatch(arg, /^['"`](?:https?:|\/\/)/, `${file}: ${arg}`);
       }
     }
+    const github = readFileSync(join(dir, 'github.js'), 'utf8');
+    assert.match(github, /const API = 'https:\/\/api\.github\.com';/);
+    assert.match(github, /credentials: 'omit'/);
+    assert.match(github, /isPublishablePath\(path\)/, 'lista fechada de caminhos antes de gravar');
   });
 
   test('build publica dados do painel: templates e manifesto de imagens', () => {

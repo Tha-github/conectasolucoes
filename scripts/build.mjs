@@ -4,6 +4,7 @@
 import { access, cp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { basename, dirname, extname, join, relative, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { ACCESS_REPO_PATH, parseAccessFile } from '../src/lib/access.js';
 import { contentSchema } from '../src/lib/schema.js';
 import { checkImageFile, readImageMeta } from '../src/lib/image-meta.js';
 import { normalizeSiteUrl, robotsTxt, seoHead, sitemapXml } from '../src/lib/seo.js';
@@ -152,7 +153,7 @@ async function imageManifest() {
 }
 
 /**
- * @param {{ outDir?: string, basePath?: string, siteUrl?: string, contentPath?: string, year?: string }} [options]
+ * @param {{ outDir?: string, basePath?: string, siteUrl?: string, contentPath?: string, accessPath?: string, year?: string }} [options]
  *   siteUrl: URL pública (canonical, og:url, sitemap); no CI vem de actions/configure-pages.
  */
 export async function build({
@@ -160,6 +161,7 @@ export async function build({
   basePath = process.env.BASE_PATH ?? '',
   siteUrl = process.env.SITE_URL ?? '',
   contentPath = join(ROOT, 'content', 'content.json'),
+  accessPath = join(ROOT, ACCESS_REPO_PATH),
   year = String(new Date().getFullYear()),
 } = {}) {
   const normalizedBase = normalizeBasePath(basePath);
@@ -236,6 +238,17 @@ export async function build({
     JSON.stringify({ page: indexPage.source, partials }),
   );
   await writeFile(join(outDir, 'admin', 'images.json'), JSON.stringify(await imageManifest()));
+
+  // Acesso do painel (token cifrado pela senha; CLAUDE.md §7, exceção). Ausente
+  // = painel abre na configuração inicial. Formato inválido interrompe o build.
+  const accessText = await readFile(accessPath, 'utf8').catch((error) => {
+    if (error.code === 'ENOENT') return null;
+    throw error;
+  });
+  if (accessText !== null) {
+    if (!parseAccessFile(accessText)) throw new Error(`Arquivo de acesso do painel inválido: ${accessPath}`);
+    await writeFile(join(outDir, 'admin', 'acesso.json'), accessText);
+  }
 
   // robots.txt e sitemap.xml só valem na raiz do domínio (domínio próprio ou usuario.github.io).
   await writeFile(join(outDir, 'robots.txt'), robotsTxt(normalizedSiteUrl));

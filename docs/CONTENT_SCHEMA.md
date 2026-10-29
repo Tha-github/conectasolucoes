@@ -175,7 +175,7 @@ Total de campos editáveis: **119**.
 | `brand.name` | Marca › Nome da empresa | texto, 1–40 caracteres, uma linha |
 | `brand.tagline` | Marca › Área de atuação (rodapé) | texto, 1–80 caracteres, uma linha |
 | `brand.region` | Marca › Região de atendimento (rodapé) | texto, 1–60 caracteres, uma linha |
-| `brand.logo` | Marca › Símbolo da marca (ao lado do nome) | imagem: svg/png/webp/avif, até 200 KB, 120×32 a 2000×1000 px; alt até 60 |
+| `brand.logo` | Marca › Logotipo (cabeçalho) | imagem: svg/png/webp/avif, até 200 KB, 120×32 a 2000×1000 px; alt até 60 |
 
 #### `a11y` — Textos de acessibilidade
 
@@ -332,13 +332,13 @@ Total de campos editáveis: **119**.
 | `theme.colors.textMuted` | Tema › Cores (chaves fixas, formato #RRGGBB) › Texto secundário | cor `#RRGGBB` + contraste |
 | `theme.colors.border` | Tema › Cores (chaves fixas, formato #RRGGBB) › Divisórias | cor `#RRGGBB` + contraste |
 | `theme.colors.borderStrong` | Tema › Cores (chaves fixas, formato #RRGGBB) › Bordas de controles | cor `#RRGGBB` + contraste |
-| `theme.colors.primary` | Tema › Cores (chaves fixas, formato #RRGGBB) › Cor de ação (botões, foco) | cor `#RRGGBB` + contraste |
+| `theme.colors.primary` | Tema › Cores (chaves fixas, formato #RRGGBB) › Cor de ação (botões, selo e detalhes) | cor `#RRGGBB` + contraste |
 | `theme.colors.onPrimary` | Tema › Cores (chaves fixas, formato #RRGGBB) › Texto sobre a cor de ação | cor `#RRGGBB` + contraste |
-| `theme.colors.accent` | Tema › Cores (chaves fixas, formato #RRGGBB) › Destaque claro (vinho: títulos em destaque, ícones) | cor `#RRGGBB` + contraste |
-| `theme.colors.dark` | Tema › Cores (chaves fixas, formato #RRGGBB) › Fundo escuro (vinho: destaque, atuação, rodapé) | cor `#RRGGBB` + contraste |
+| `theme.colors.accent` | Tema › Cores (chaves fixas, formato #RRGGBB) › Destaque no claro (títulos, ícones, foco) | cor `#RRGGBB` + contraste |
+| `theme.colors.dark` | Tema › Cores (chaves fixas, formato #RRGGBB) › Fundo de destaque (hero, atuação, rodapé) | cor `#RRGGBB` + contraste |
 | `theme.colors.onDark` | Tema › Cores (chaves fixas, formato #RRGGBB) › Texto sobre fundo escuro | cor `#RRGGBB` + contraste |
 | `theme.colors.onDarkMuted` | Tema › Cores (chaves fixas, formato #RRGGBB) › Texto secundário sobre fundo escuro | cor `#RRGGBB` + contraste |
-| `theme.colors.accentOnDark` | Tema › Cores (chaves fixas, formato #RRGGBB) › Destaque sobre fundo escuro (dourado dos títulos) | cor `#RRGGBB` + contraste |
+| `theme.colors.accentOnDark` | Tema › Cores (chaves fixas, formato #RRGGBB) › Destaque sobre fundo escuro (títulos, foco) | cor `#RRGGBB` + contraste |
 
 <!-- inventario:fim -->
 <!-- prettier-ignore-end -->

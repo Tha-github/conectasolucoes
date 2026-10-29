@@ -120,12 +120,18 @@ describe('build de produção (site de projeto em /conecta-site)', () => {
     assert.match(css, new RegExp(`--color-on-primary: ${colors.onPrimary};`));
   });
 
-  test('cabeçalho: símbolo oficial decorativo ao lado do nome da marca em texto', () => {
+  test('cabeçalho: logotipo oficial com texto alternativo; favicon do ícone oficial', () => {
     const html = readFileSync(join(outDir, 'index.html'), 'utf8');
-    assert.match(
-      html,
-      /<a class="brand" href="[^"]*">\s*<img src="[^"]*assets\/img\/simbolo\.png" alt=""[^>]*class="brand__logo"[^>]*>\s*<span class="brand__name">Conecta Soluções<\/span>/,
-    );
+    // Lê o logotipo do conteúdo: o painel pode substituí-lo sem quebrar este teste no CI.
+    const { logo } = loadDefaultContent().brand;
+    const brand = html.match(/<a class="brand" href="[^"]*">\s*(<[^>]+>)/)[1];
+    if (logo.src) {
+      assert.ok(brand.includes(`src="./${logo.src}"`), brand);
+      assert.ok(brand.includes(`alt="${escapeHtml(logo.alt)}"`) && logo.alt.trim() !== '', brand);
+      assert.match(brand, /class="brand__logo"/);
+    } else {
+      assert.match(brand, /class="media-fallback brand__logo" role="img"/);
+    }
     assert.match(html, /<link rel="icon" href="[^"]*assets\/favicon\.png"/);
     assert.ok(existsSync(join(outDir, 'assets', 'favicon.png')));
   });

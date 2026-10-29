@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' blob:; img-src 'self' blob:; font-src 'self'; connect-src 'self'; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' blob:; img-src 'self' blob:; font-src 'self'; connect-src 'self' https://api.github.com; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
     <meta name="referrer" content="no-referrer">
     <meta name="robots" content="noindex, nofollow">
     <meta name="color-scheme" content="light">
@@ -30,34 +30,70 @@
         <ul class="admin-status" id="status" role="status" aria-live="polite">
           <li class="admin-status__item">Carregando conteúdo…</li>
         </ul>
-        <div class="admin-bar__actions">
-          <button type="button" class="button button--primary button--sm" data-action="save" disabled>Salvar rascunho</button>
+        <div class="admin-bar__actions" id="panel-actions" hidden>
+          <button type="button" class="button button--primary button--sm" data-action="publish" disabled>Publicar no site</button>
+          <button type="button" class="button button--secondary button--sm" data-action="save" disabled>Salvar rascunho</button>
           <button type="button" class="button button--secondary button--sm" data-action="export" disabled>Exportar JSON</button>
           <button type="button" class="button button--secondary button--sm" data-action="import" disabled>Importar JSON</button>
           <button type="button" class="button button--secondary button--sm" data-action="reset" disabled>Restaurar padrão</button>
           <input type="file" id="import-file" class="visually-hidden" accept=".json,application/json" tabindex="-1" aria-hidden="true">
+          <button type="button" class="button button--secondary button--sm" data-action="password" disabled>Trocar senha</button>
+          <button type="button" class="button button--secondary button--sm" data-action="logout" disabled>Sair</button>
         </div>
       </div>
     </header>
 
-    <div class="admin-notice">
+    <section class="admin-auth" id="auth" aria-labelledby="auth-title">
+      <div class="admin-auth__card">
+        <h2 class="admin-auth__title" id="auth-title">Acesso ao painel</h2>
+        <p class="admin-auth__status" id="auth-status" role="status" aria-live="polite" hidden></p>
+
+        <form class="admin-auth__form" id="form-login" data-auth-view="login" hidden novalidate>
+          <div class="field">
+            <label class="field__label" for="login-senha">Senha do painel</label>
+            <input class="field__control" id="login-senha" name="senha" type="password" autocomplete="current-password" required aria-describedby="login-senha-erro">
+            <p class="field__message field__message--error" id="login-senha-erro" hidden></p>
+          </div>
+          <button type="submit" class="button button--primary">Entrar</button>
+          <button type="button" class="admin-auth__link" data-auth="reconfigure">Reconfigurar acesso (nova chave do GitHub)</button>
+        </form>
+
+        <form class="admin-auth__form" id="form-setup" data-auth-view="setup" hidden novalidate>
+          <p class="admin-auth__intro">Configuração feita uma vez pelo responsável técnico: cole a chave do GitHub (token fine-grained só deste repositório, com <strong>Contents: Read and write</strong>) e defina a senha do painel. A chave é gravada <strong>criptografada com a senha</strong>; ela nunca fica legível no site.</p>
+          <div class="field">
+            <label class="field__label" for="setup-token">Chave de acesso do GitHub</label>
+            <input class="field__control" id="setup-token" name="token" type="password" autocomplete="off" spellcheck="false" required aria-describedby="setup-token-erro">
+            <p class="field__message field__message--error" id="setup-token-erro" hidden></p>
+          </div>
+          <div class="field">
+            <label class="field__label" for="setup-nova-senha">Senha do painel (mínimo de 10 caracteres; prefira uma frase)</label>
+            <input class="field__control" id="setup-nova-senha" name="nova-senha" type="password" autocomplete="new-password" required aria-describedby="setup-nova-senha-erro">
+            <p class="field__message field__message--error" id="setup-nova-senha-erro" hidden></p>
+          </div>
+          <div class="field">
+            <label class="field__label" for="setup-confirmar-senha">Confirme a senha</label>
+            <input class="field__control" id="setup-confirmar-senha" name="confirmar-senha" type="password" autocomplete="new-password" required aria-describedby="setup-confirmar-senha-erro">
+            <p class="field__message field__message--error" id="setup-confirmar-senha-erro" hidden></p>
+          </div>
+          <button type="submit" class="button button--primary">Salvar acesso e entrar</button>
+          <button type="button" class="admin-auth__link" data-auth="back" hidden>Voltar para a senha</button>
+        </form>
+      </div>
+    </section>
+
+    <div class="admin-notice" id="panel-notice" hidden>
       <div class="admin-notice__inner">
         <p>
-          <strong>Este painel não publica o site.</strong>
-          Salvar guarda um rascunho só neste navegador; exportar gera um arquivo; publicar exige integrar o arquivo ao
-          repositório e fazer um novo deploy. <a href="#como-publicar">Como publicar</a>
-        </p>
-        <p>
-          <strong>Página pública, sem senha.</strong>
-          Qualquer pessoa com o endereço pode abri-la; ela altera dados apenas no navegador de quem a usa.
-          Não insira informações confidenciais.
+          <strong>Publicar no site</strong> grava as alterações no repositório do GitHub; o site é atualizado para
+          todos os visitantes em 1 a 3 minutos, depois da validação automática.
+          <strong>Salvar rascunho</strong> guarda só neste navegador. <a href="#como-publicar">Como funciona</a>
         </p>
       </div>
     </div>
 
     <div class="admin-messages" id="messages"></div>
 
-    <main class="admin-layout">
+    <main class="admin-layout" id="panel" hidden>
       <aside class="admin-sidebar" aria-labelledby="sidebar-title">
         <p class="admin-sidebar__title" id="sidebar-title">Áreas do site</p>
         <nav class="admin-groups" id="group-nav" aria-label="Áreas do site"></nav>
@@ -88,25 +124,45 @@
       </section>
     </main>
 
-    <section class="admin-help" id="como-publicar" aria-labelledby="help-title">
+    <section class="admin-help" id="como-publicar" aria-labelledby="help-title" hidden>
       <div class="admin-help__inner">
-        <h2 id="help-title">Salvar, exportar e publicar</h2>
+        <h2 id="help-title">Publicar, salvar e exportar</h2>
         <ol class="admin-help__steps">
           <li>
+            <h3>Publicar no site</h3>
+            <p>Grava o conteúdo e as imagens novas no GitHub, num único registro. O GitHub valida tudo automaticamente e atualiza o site em 1 a 3 minutos. O painel avisa quando as mudanças já estiverem no ar. Se a validação recusar algo, o site continua como estava.</p>
+          </li>
+          <li>
             <h3>Salvar rascunho</h3>
-            <p>Guarda as alterações apenas neste navegador, neste computador. Ninguém mais vê. Limpar os dados do navegador apaga o rascunho.</p>
+            <p>Guarda as alterações apenas neste navegador, neste computador, sem publicar. Útil para continuar depois.</p>
           </li>
           <li>
-            <h3>Exportar JSON</h3>
-            <p>Baixa um arquivo com todo o conteúdo validado. Se você trocou imagens, baixe também os arquivos de imagem indicados. Envie tudo ao responsável técnico.</p>
-          </li>
-          <li>
-            <h3>Publicar</h3>
-            <p>Quem tem acesso ao repositório no GitHub envia o <code>content.json</code> (e as imagens) numa branch <code>conteudo/…</code> e abre um Pull Request. O GitHub valida tudo automaticamente; depois do merge, o site é publicado. Sem esse acesso, envie os arquivos ao responsável técnico. Só então os visitantes veem as mudanças.</p>
+            <h3>Exportar e importar JSON</h3>
+            <p>Cópia de segurança do conteúdo validado, para guardar ou enviar ao responsável técnico.</p>
           </li>
         </ol>
       </div>
     </section>
+
+    <dialog class="admin-dialog" id="password-dialog" aria-labelledby="password-dialog-title">
+      <h2 class="admin-dialog__title" id="password-dialog-title">Trocar a senha do painel</h2>
+      <form id="form-password" novalidate>
+        <div class="field">
+          <label class="field__label" for="troca-nova-senha">Nova senha (mínimo de 10 caracteres)</label>
+          <input class="field__control" id="troca-nova-senha" name="nova-senha" type="password" autocomplete="new-password" aria-describedby="troca-nova-senha-erro">
+          <p class="field__message field__message--error" id="troca-nova-senha-erro" hidden></p>
+        </div>
+        <div class="field">
+          <label class="field__label" for="troca-confirmar-senha">Confirme a nova senha</label>
+          <input class="field__control" id="troca-confirmar-senha" name="confirmar-senha" type="password" autocomplete="new-password" aria-describedby="troca-confirmar-senha-erro">
+          <p class="field__message field__message--error" id="troca-confirmar-senha-erro" hidden></p>
+        </div>
+        <div class="admin-dialog__actions">
+          <button type="submit" class="button button--primary button--sm">Salvar nova senha</button>
+          <button type="button" class="button button--secondary button--sm" data-password-choice="cancel">Cancelar</button>
+        </div>
+      </form>
+    </dialog>
 
     <dialog class="admin-dialog" id="confirm-dialog" aria-labelledby="confirm-title" aria-describedby="confirm-text">
       <h2 class="admin-dialog__title" id="confirm-title"></h2>

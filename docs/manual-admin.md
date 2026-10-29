@@ -8,20 +8,18 @@ Endereço do painel: **`<endereço do site>/admin/`** (por exemplo, `https://usu
 | Alterar um texto              | [1. Alterar textos](#1-alterar-textos)                                    |
 | Trocar uma foto               | [2. Substituir imagens](#2-substituir-imagens)                            |
 | Mudar uma cor                 | [3. Modificar cores](#3-modificar-cores)                                  |
+| Entrar no painel              | [Entrar](#entrar-no-painel)                                               |
 | Colocar as mudanças no ar     | [5. Publicar](#5-publicar-as-mudanças)                                    |
 | Continuar em outro computador | [4. Salvar, exportar e importar](#4-salvar-exportar-importar-e-restaurar) |
 
 ## Antes de começar: três regras
 
-1. **O painel não publica sozinho.** Ele edita o conteúdo **no seu navegador**, mostra uma prévia e gera um arquivo.
-   Os visitantes só veem as mudanças depois da [publicação](#5-publicar-as-mudanças).
-2. **O painel é uma página pública, sem senha.** Quem tiver o endereço consegue abri-lo, mas só altera o próprio
-   navegador: ninguém muda o site por ele. A segurança está na publicação, que exige conta autorizada no GitHub.
-   **Não digite informações confidenciais.**
-   - Uma "senha" verificada só no navegador não protegeria nada, porque o código do site é público. Por isso ela não
-     existe.
-   - Acesso restrito de verdade ou publicação com um clique exigiriam um serviço externo com login, o que ainda não
-     foi autorizado.
+1. **Nada vai ao ar até você clicar em Publicar no site.** Até lá, as alterações ficam só neste navegador (com
+   prévia). Depois de publicar, o site muda para todos os visitantes em 1 a 3 minutos.
+2. **Guarde a senha com cuidado.** Ela destrava a chave que permite alterar o site. Use uma frase longa, não a anote
+   em lugar visível e não a envie por mensagem aberta. Se desconfiar que alguém a conhece, avise o responsável
+   técnico para trocar a chave e a senha. **Não digite informações confidenciais nos campos:** tudo o que é
+   publicado fica público.
 3. **O painel altera apenas três coisas:**
    - **textos**;
    - **imagens** (arquivo, enquadramento e descrição);
@@ -30,11 +28,23 @@ Endereço do painel: **`<endereço do site>/admin/`** (por exemplo, `https://usu
    Ele não cria, apaga, duplica nem reordena seções, serviços, links, botões ou menus. Também não muda o número do
    WhatsApp, os destinos dos links nem o layout. Essas alterações são feitas pelo responsável técnico.
 
+## Entrar no painel
+
+1. Abra o endereço do painel e digite a **senha**. Clique em **Entrar**.
+2. Senha errada mostra "Senha incorreta." e o campo fica limpo para tentar de novo.
+3. Ao terminar, clique em **Sair** (ou feche a aba). O acesso não fica guardado no navegador: na próxima vez, a senha
+   é pedida de novo.
+4. **Trocar senha:** dentro do painel, botão **Trocar senha**. A senha nova vale depois que o site atualizar (1 a 3
+   minutos).
+
+Na primeira vez (antes de existir senha), o painel mostra a **configuração inicial**, feita pelo responsável
+técnico ([`publicacao.md`](publicacao.md) §0).
+
 ## A tela
 
 | Área                             | Para que serve                                                                                                                                                                                                                          |
 | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Barra superior**               | Status e os botões **Salvar rascunho**, **Exportar JSON**, **Importar JSON** e **Restaurar padrão**.                                                                                                                                    |
+| **Barra superior**               | Status e os botões **Publicar no site**, **Salvar rascunho**, **Exportar JSON**, **Importar JSON**, **Restaurar padrão**, **Trocar senha** e **Sair**.                                                                                  |
 | **Menu lateral (Áreas do site)** | Leva aos grupos de campos (Destaque principal, Empresa, Serviços, Tema…). O número ao lado de uma área indica quantos campos dela foram alterados em relação ao site publicado. No celular, o menu vira uma faixa: deslize para o lado. |
 | **Campos**                       | Cada texto mostra o limite de caracteres (ex.: `62/80`). Campos alterados ganham um filete à esquerda e o botão **Restaurar padrão**.                                                                                                   |
 | **Prévia**                       | Mostra a página com as suas alterações (ao lado dos campos em telas largas, abaixo deles nas menores). Os botões **Celular**, **Tablet** e **Largura total** mudam a largura.                                                           |
@@ -131,8 +141,22 @@ Conecta Soluções.
 
 ## 5. Publicar as mudanças
 
-A publicação acontece **por Pull Request no GitHub**, com a conta de quem tem acesso ao repositório. O passo a passo
-completo está em [`publicacao.md`](publicacao.md) §4. Resumo:
+1. Confira a **prévia** (Celular, Tablet e Largura total).
+2. Clique em **Publicar no site** e confirme em **Publicar agora**.
+3. Aparece "Enviado. O GitHub está validando e atualizando o site". Em 1 a 3 minutos, o aviso muda para **"Pronto:
+   as alterações já aparecem no site para todos os visitantes."** Pode continuar editando enquanto isso.
+4. Se aparecer que **"as alterações ainda não apareceram"** depois de alguns minutos, a validação automática pode ter
+   recusado algo (o site continua como estava). Avise o responsável técnico.
+5. Se aparecer que **"o conteúdo no GitHub mudou depois que este painel foi aberto"**, outra publicação aconteceu
+   (por exemplo, em outro computador). Nada foi publicado: exporte ou salve o rascunho, aguarde alguns minutos,
+   recarregue a página e refaça.
+
+As imagens novas vão junto na mesma publicação; não é preciso baixá-las nem enviá-las à parte.
+
+### Alternativa: publicar por Pull Request (sem o painel)
+
+Continua disponível para o responsável técnico, com a conta do GitHub. Passo a passo completo em
+[`publicacao.md`](publicacao.md) §4. Resumo:
 
 1. **No painel:** confira a prévia → **Exportar JSON** → **Baixar como content.json (para o GitHub)**. Se trocou
    imagens, baixe também cada arquivo indicado, **sem renomear**.
@@ -168,9 +192,13 @@ O painel exige navegador atual (Chrome, Edge, Firefox ou Safari recentes) com Ja
 
 ## 7. Segurança (resumo técnico)
 
-- Não há senhas, tokens nem chaves no código. O painel só faz requisições ao próprio site: `content/content.json`,
-  `admin/preview-templates.json` e `admin/images.json`.
-- A CSP permite apenas `'self'`, mais `blob:` para as imagens e o tema da prévia, que são gerados localmente.
+- Não há senha nem token **legíveis** no código. A chave do GitHub existe só cifrada em `admin/acesso.json`
+  (AES-256-GCM, PBKDF2-SHA256 com 600 mil iterações) e só é decifrada na memória da aba, com a senha. Exceção
+  autorizada e riscos em `CLAUDE.md` §7 e [`publicacao.md`](publicacao.md) §0.
+- Requisições: o próprio site (`content/content.json`, `admin/preview-templates.json`, `admin/images.json`,
+  `admin/acesso.json`) e, depois do login, `https://api.github.com` (única origem externa liberada na CSP, em
+  `connect-src`). O painel só grava `content/content.json`, `content/acesso.json` e imagens em `src/assets/img/`.
+- A CSP permite `'self'`, `blob:` para as imagens e o tema da prévia (gerados localmente) e `api.github.com`.
 - A prévia roda num `iframe` com `sandbox` sem scripts, e todo texto é escapado.
 - JSON importado, rascunho salvo e arquivos de imagem são tratados como entrada não confiável. A validação estrita
   cobre:
