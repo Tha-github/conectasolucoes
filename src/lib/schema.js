@@ -7,7 +7,9 @@
 // uma migração em src/lib/migrate.js.
 
 // v2: imagens ganharam "focus" (enquadramento). Migração em migrate.js.
-export const SCHEMA_VERSION = 2;
+// v3: redesign estrutural — destaques de título, selo e imagem de detalhe do
+// hero, mosaico e características da Empresa, botões e imagem do Contato.
+export const SCHEMA_VERSION = 3;
 
 /** Caminhos de imagem aceitos: arquivos versionados em src/assets/img (sem subpastas). */
 export const IMAGE_PATH_PATTERN = /^assets\/img\/[a-z0-9][a-z0-9-]*\.(?:webp|jpe?g|png|avif|svg)$/;
@@ -59,6 +61,23 @@ export const SERVICE_IDS = Object.freeze([
 export const APPROACH_IDS = Object.freeze(['ciclo-completo', 'visao-integrada', 'modernizacao', 'registro-tecnico']);
 
 /**
+ * Mosaico da seção "Empresa": about.image ocupa a 1ª posição e estas 7 imagens
+ * as seguintes (quantidade e ordem fixas; o painel só substitui as imagens).
+ */
+export const GALLERY_IDS = Object.freeze([
+  'scada',
+  'protecao',
+  'paineis',
+  'supervisao',
+  'transformador',
+  'infraestrutura',
+  'subestacao',
+]);
+
+/** Características da seção "Empresa" (grade 3 × 2; ícones fixos no template). */
+export const FACT_IDS = Object.freeze(['area', 'regiao', 'servicos', 'ciclo', 'motores', 'contato']);
+
+/**
  * Inventário de seções da página inicial, na ordem aprovada (PROJECT_AUDIT §9).
  * IDs são âncoras fixas da navegação; verificado em teste.
  */
@@ -81,6 +100,9 @@ export const CONTRAST_PAIRS = Object.freeze([
   ['textMuted', 'surfaceAlt', MIN_CONTRAST_TEXT],
   ['accent', 'background', MIN_CONTRAST_TEXT],
   ['accent', 'surface', MIN_CONTRAST_TEXT],
+  ['accent', 'surfaceAlt', MIN_CONTRAST_TEXT],
+  // Ícones claros sobre os quadrados em destaque (características e serviços).
+  ['onDark', 'accent', MIN_CONTRAST_UI],
   ['onPrimary', 'primary', MIN_CONTRAST_TEXT],
   ['onDark', 'dark', MIN_CONTRAST_TEXT],
   ['onDarkMuted', 'dark', MIN_CONTRAST_TEXT],
@@ -177,14 +199,17 @@ export const contentSchema = object('Conteúdo', {
     name: text('Nome da empresa', 40),
     tagline: text('Área de atuação (rodapé)', 80),
     region: text('Região de atendimento (rodapé)', 60),
+    // Símbolo da marca, exibido ao lado do nome em texto (cabeçalho e destaque).
+    // O nome visível já identifica a marca: texto alternativo vazio = decorativo.
     // SVG só pelo repositório (validado no CI); o painel envia apenas formatos raster.
-    logo: image('Logotipo', {
+    logo: image('Símbolo da marca (ao lado do nome)', {
       formats: ['svg', 'png', 'webp', 'avif'],
       maxBytes: 200_000,
       minWidth: 120,
       minHeight: 32,
       maxWidth: 2000,
       maxHeight: 1000,
+      altRequired: false,
       altMaxLength: 60,
       target: { width: 800, height: 400 },
     }),
@@ -206,44 +231,81 @@ export const contentSchema = object('Conteúdo', {
   }),
   hero: object('Destaque principal', {
     eyebrow: text('Rótulo', 50),
-    title: text('Título principal', 80),
+    title: text('Título principal (parte em branco)', 80),
+    titleAccent: text('Título principal (parte em dourado; pode ficar vazio)', 60, { minLength: 0 }),
     text: text('Texto de apoio', 220),
     cta: text('Botão', 32),
-    // Molduras de src/css/sections.css: .hero__media (4:5 no celular, 3:2 no tablet;
-    // no computador ocupa a altura da primeira dobra, perto de 1:1).
-    image: image('Imagem do destaque', {
+    // Molduras de src/css/sections.css: .hero__photo é um recorte vertical de
+    // aprox. 1:2 (com aresta diagonal) em todas as telas; .hero__detail, 4:5.
+    image: image('Imagem principal do destaque', {
       maxBytes: 800_000,
-      minWidth: 1200,
-      minHeight: 1000,
+      minWidth: 600,
+      minHeight: 1200,
       focal: true,
-      frames: [
-        { label: 'Computador (aprox.)', ratio: '1 / 1' },
-        { label: 'Tablet', ratio: '3 / 2' },
-        { label: 'Celular', ratio: '4 / 5' },
-      ],
-      target: { width: 2400, height: 2400 },
+      frames: [{ label: 'Recorte vertical (todas as telas)', ratio: '1 / 2' }],
+      target: { width: 900, height: 1800 },
+    }),
+    detail: image('Imagem em primeiro plano do destaque', {
+      minWidth: 600,
+      minHeight: 750,
+      focal: true,
+      frames: [{ label: 'Todas as telas', ratio: '4 / 5' }],
+      target: { width: 720, height: 900 },
+    }),
+    seal: object('Selo circular', {
+      label: text('Linha superior', 20),
+      title: text('Destaque', 24),
+      text: text('Linha inferior', 30),
     }),
   }),
   about: object('Empresa', {
     eyebrow: text('Rótulo', 40),
-    title: text('Título', 80),
+    title: text('Título (parte leve)', 80),
+    titleAccent: text('Título (parte em destaque; pode ficar vazio)', 60, { minLength: 0 }),
     text: text('Texto de apresentação', 500),
-    image: image('Imagem da empresa', {
-      minWidth: 1000,
-      minHeight: 650,
+    cta: text('Botão', 32),
+    // .about__tile: mosaico 4 × 2 de recortes verticais 3:4.
+    image: image('Mosaico: imagem 1', {
+      minWidth: 480,
+      minHeight: 640,
       focal: true,
-      // .about__media: 4:5 no celular e no computador, 3:2 no tablet.
-      frames: [
-        { label: 'Celular e computador', ratio: '4 / 5' },
-        { label: 'Tablet', ratio: '3 / 2' },
-      ],
-      target: { width: 1800, height: 1800 },
+      frames: [{ label: 'Mosaico (todas as telas)', ratio: '3 / 4' }],
+      target: { width: 600, height: 800 },
     }),
+    gallery: object(
+      'Mosaico: demais imagens (fixas: 7)',
+      Object.fromEntries(
+        GALLERY_IDS.map((id, i) => [
+          id,
+          image(`Mosaico: imagem ${i + 2}`, {
+            minWidth: 480,
+            minHeight: 640,
+            focal: true,
+            frames: [{ label: 'Mosaico (todas as telas)', ratio: '3 / 4' }],
+            target: { width: 600, height: 800 },
+          }),
+        ]),
+      ),
+    ),
+    facts: object(
+      'Características (fixas: 6)',
+      Object.fromEntries(
+        FACT_IDS.map((id, i) => [
+          id,
+          object(`Característica ${String(i + 1).padStart(2, '0')}`, {
+            label: text('Rótulo', 24),
+            value: text('Valor em destaque', 32),
+          }),
+        ]),
+      ),
+    ),
   }),
   services: object('Serviços', {
     eyebrow: text('Rótulo', 40),
-    title: text('Título', 60),
+    title: text('Título (parte leve)', 60),
+    titleAccent: text('Título (parte em destaque; pode ficar vazio)', 40, { minLength: 0 }),
     intro: text('Introdução', 220),
+    cta: text('Botão', 32),
     items: object(
       'Lista de serviços (fixa: 21 itens)',
       Object.fromEntries(
@@ -256,7 +318,9 @@ export const contentSchema = object('Conteúdo', {
   }),
   approach: object('Abordagem', {
     eyebrow: text('Rótulo', 40),
-    title: text('Título', 60),
+    title: text('Título (parte leve)', 60),
+    titleAccent: text('Título (parte em destaque; pode ficar vazio)', 40, { minLength: 0 }),
+    text: text('Texto de apresentação', 240),
     items: object(
       'Itens (fixos: 4)',
       Object.fromEntries(
@@ -272,16 +336,31 @@ export const contentSchema = object('Conteúdo', {
   }),
   area: object('Área de atuação', {
     eyebrow: text('Rótulo', 40),
-    // Exibido em escala display (até 120 px): limite curto para não quebrar o layout.
-    title: text('Título', 40),
+    // Exibido em escala display: limites curtos para não quebrar o layout.
+    title: text('Título (parte em branco)', 40),
+    titleAccent: text('Título (parte em dourado; pode ficar vazio)', 30, { minLength: 0 }),
     text: text('Texto', 260),
+    cta: text('Botão', 32),
   }),
   contact: object('Contato', {
     eyebrow: text('Rótulo', 40),
-    title: text('Título', 80),
+    title: text('Título (parte leve)', 80),
+    titleAccent: text('Título (parte em destaque; pode ficar vazio)', 50, { minLength: 0 }),
     text: text('Texto', 220),
     cta: text('Botão', 32),
     whatsappLabel: text('Rótulo do número', 20),
+    // .contact__band: faixa panorâmica acima do cartão de contato.
+    image: image('Imagem da faixa do contato', {
+      maxBytes: 600_000,
+      minWidth: 1600,
+      minHeight: 600,
+      focal: true,
+      frames: [
+        { label: 'Computador', ratio: '12 / 5' },
+        { label: 'Celular', ratio: '3 / 2' },
+      ],
+      target: { width: 2400, height: 1000 },
+    }),
   }),
   notFound: object('Página 404', {
     eyebrow: text('Rótulo', 30),
@@ -301,11 +380,11 @@ export const contentSchema = object('Conteúdo', {
       borderStrong: color('Bordas de controles'),
       primary: color('Cor de ação (botões, foco)'),
       onPrimary: color('Texto sobre a cor de ação'),
-      accent: color('Destaque (filetes e numeração)'),
-      dark: color('Fundo escuro (atuação, rodapé)'),
+      accent: color('Destaque claro (vinho: títulos em destaque, ícones)'),
+      dark: color('Fundo escuro (vinho: destaque, atuação, rodapé)'),
       onDark: color('Texto sobre fundo escuro'),
       onDarkMuted: color('Texto secundário sobre fundo escuro'),
-      accentOnDark: color('Destaque sobre fundo escuro'),
+      accentOnDark: color('Destaque sobre fundo escuro (dourado dos títulos)'),
     }),
   }),
 });
@@ -339,12 +418,18 @@ export function walkSchema(visit, field = contentSchema, path = '') {
  * @property {{ name: string, tagline: string, region: string, logo: ImageValue }} brand
  * @property {{ skipLink: string, newTab: string }} a11y
  * @property {Record<string, string>} nav
- * @property {{ eyebrow: string, title: string, text: string, cta: string, image: ImageValue }} hero
- * @property {{ eyebrow: string, title: string, text: string, image: ImageValue }} about
- * @property {{ eyebrow: string, title: string, intro: string, items: Record<string, { title: string }> }} services
- * @property {{ eyebrow: string, title: string, items: Record<string, { title: string, text: string }> }} approach
- * @property {{ eyebrow: string, title: string, text: string }} area
- * @property {{ eyebrow: string, title: string, text: string, cta: string, whatsappLabel: string }} contact
+ * @property {{
+ *   eyebrow: string, title: string, titleAccent: string, text: string, cta: string,
+ *   image: ImageValue, detail: ImageValue, seal: { label: string, title: string, text: string }
+ * }} hero
+ * @property {{
+ *   eyebrow: string, title: string, titleAccent: string, text: string, cta: string, image: ImageValue,
+ *   gallery: Record<string, ImageValue>, facts: Record<string, { label: string, value: string }>
+ * }} about
+ * @property {{ eyebrow: string, title: string, titleAccent: string, intro: string, cta: string, items: Record<string, { title: string }> }} services
+ * @property {{ eyebrow: string, title: string, titleAccent: string, text: string, items: Record<string, { title: string, text: string }> }} approach
+ * @property {{ eyebrow: string, title: string, titleAccent: string, text: string, cta: string }} area
+ * @property {{ eyebrow: string, title: string, titleAccent: string, text: string, cta: string, whatsappLabel: string, image: ImageValue }} contact
  * @property {{ eyebrow: string, title: string, text: string, cta: string }} notFound
  * @property {{ colors: Record<string, string> }} theme
  */

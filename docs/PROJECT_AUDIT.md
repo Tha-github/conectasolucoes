@@ -719,3 +719,47 @@ texto pelo cliente), painel com a mesma identidade, revisão de SEO/segurança/p
 **Verificação:** 283 testes, lint, `validate:publish`, `docs:schema --check`, `npm audit` (0); 8 larguras sem
 overflow horizontal (site e painel); edição real no painel (contadores, HTML escapado na prévia, contraste recusado);
 Lighthouse no build de produção servido localmente: celular 98/100/96/100, desktop 100/100/96/100, CLS 0.
+
+## 17. Redesign estrutural a partir das capturas da referência (29/10/2026)
+
+Pedido: o redesign v2 foi considerado superficial (fontes, cores e espaçamentos sobre a mesma estrutura). O cliente
+enviou capturas da referência Merlot Residence e pediu a mesma organização visual (hero vinho com composição em
+camadas e selo; seção bege com mosaico à esquerda e características à direita; linguagem aplicada ao resto), sem
+copiar a empresa da referência.
+
+**Autorização de escopo.** A mudança estrutural (marcação e CSS das seções, novos campos fixos) foi pedida
+explicitamente. Continua valendo a regra do painel: ele só altera valores de chaves fixas. Seções, ordem, IDs e
+quantidade de itens seguem definidos no código e verificados em teste.
+
+**Decisões**
+
+- **Schema v3** (migração `MIGRATIONS[2]`, com testes): títulos em duas partes (`titleAccent`, pode ficar vazio) em
+  hero, empresa, serviços, abordagem, atuação e contato; `hero.detail` (foto em primeiro plano) e `hero.seal` (3
+  linhas); `about.gallery` (7 imagens fixas, `GALLERY_IDS`) + `about.image` = mosaico de 8; `about.facts` (6
+  características fixas, `FACT_IDS`); botões `about.cta`, `services.cta`, `area.cta`; `approach.text`;
+  `contact.image`. A migração divide os títulos padrão da v2 e mantém inteiros os títulos personalizados. Total:
+  119 campos (antes 85).
+- **Selo e características só com fatos do CLAUDE.md §3:** região de atendimento, área, 21 serviços listados,
+  atuação do projeto ao suporte, rebobinagem de motores, contato por WhatsApp. Nenhuma métrica, ano ou certificação.
+  **Aguardam validação do cliente.**
+- **Fotografias:** 11 imagens CC0/domínio público do Wikimedia Commons (API acessível; Unsplash continua bloqueado),
+  recortadas e otimizadas para a exibição em 2×. Fonte, autor e licença em `CREDITOS_IMAGENS.md`. A foto de
+  rebobinagem foi recortada para não mostrar rosto nem uniforme.
+- **Pessoas:** a família da referência **não** foi substituída por pessoas; a camada de primeiro plano é uma sala
+  elétrica (sem inventar equipe ou clientes).
+- **Marca:** `logotipo.png` e `icone.png` foram adicionados pelo cliente durante o trabalho. Por decisão do cliente,
+  o site usa o símbolo (`simbolo.png`, cópia reduzida e não editada) ao lado do nome em texto; o logotipo horizontal
+  não é legível sobre vinho e não pode ser recolorido. Favicon gerado do símbolo (resolve o 404 de `favicon.ico`
+  apontado no Lighthouse anterior).
+- **Fontes:** Outfit (títulos) + Manrope (texto), 57 KB. Cormorant Garamond removida das dependências.
+- **Paleta:** vinho `#49091D`, bege `#F2EDE3`, dourado `#9A6A3C` (escurecido em relação à referência para manter
+  4,67:1 com texto branco). Pares novos no `CONTRAST_PAIRS`: `accent`/`surfaceAlt` e `onDark`/`accent`.
+- **Sem formulário** no Contato (a referência tem um): exigiria backend e coleta de dados pessoais. No lugar, painel
+  com o número e o botão do WhatsApp.
+
+**Verificação:** `npm run check` (lint + 293 testes + build), `validate:publish`, `docs:schema --check`, `npm audit`
+(0 vulnerabilidades); capturas em 320, 360, 375, 390, 430, 768, 820, 1024, 1280, 1440 e 1920 px sem rolagem
+horizontal e com cabeçalho de altura constante; painel `/admin/` no navegador (158 controles, prévia com mosaico e
+selo, HTML digitado exibido como texto); site, painel e página 404 sem erros de console nem recursos com erro;
+Lighthouse no build servido localmente (sem compressão): celular 87/100/100/100 (LCP 3,5 s, CLS 0), desktop
+100/100/100/100.

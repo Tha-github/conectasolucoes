@@ -8,7 +8,7 @@ HTML, CSS e JavaScript puros, com um build em Node sem dependências de runtime.
 | [`docs/manual-admin.md`](docs/manual-admin.md)       | Cliente: alterar textos, imagens e cores no painel (`/admin/`) e publicar |
 | [`docs/publicacao.md`](docs/publicacao.md)           | Responsável técnico: configuração do GitHub, fluxo de publicação, domínio |
 | [`docs/auditoria-final.md`](docs/auditoria-final.md) | Situação de entrega: o que foi verificado, pendências e riscos            |
-| [`docs/CONTENT_SCHEMA.md`](docs/CONTENT_SCHEMA.md)   | Inventário dos 85 campos editáveis (gerado do schema)                     |
+| [`docs/CONTENT_SCHEMA.md`](docs/CONTENT_SCHEMA.md)   | Inventário dos 119 campos editáveis (gerado do schema)                    |
 | [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md)     | Sistema visual: cores, tipografia, grid, componentes, movimento           |
 | [`docs/PROJECT_AUDIT.md`](docs/PROJECT_AUDIT.md)     | Histórico técnico e decisões de cada etapa                                |
 | [`CLAUDE.md`](CLAUDE.md)                             | Regras permanentes do projeto                                             |
@@ -75,8 +75,12 @@ reutiliza `src/lib/` e não altera o schema: edita apenas valores de textos, ima
 2. Referencie-o no `content.json` como `"assets/img/nome.webp"`.
 
 Se o arquivo não existir, o build falha. Se `src` for `null`, a página mostra o texto alternativo no lugar da imagem.
-Se a imagem falhar ao carregar no navegador, `js/media-fallback.js` faz a mesma substituição. O logotipo está como
-`null` até o arquivo oficial ser recebido, e o cabeçalho mostra o nome da marca em texto.
+Se a imagem falhar ao carregar no navegador, `js/media-fallback.js` faz a mesma substituição.
+
+As fotografias atuais (hero, mosaico e contato) são de domínio público ou CC0; fonte, autor e licença de cada uma estão
+em [`docs/CREDITOS_IMAGENS.md`](docs/CREDITOS_IMAGENS.md). O símbolo da marca (`simbolo.png`, cópia reduzida do
+`icone.png` enviado pelo cliente) aparece ao lado do nome em texto; o logotipo horizontal original (`logotipo.png`)
+está versionado, sem uso no site, porque o texto azul-marinho não é legível sobre o fundo vinho.
 
 ## Publicação no GitHub Pages
 

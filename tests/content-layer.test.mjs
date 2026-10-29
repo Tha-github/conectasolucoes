@@ -8,7 +8,7 @@ import { inventoryState } from '../scripts/schema-doc.mjs';
 import { resolveWithDefaults } from '../src/lib/defaults.js';
 import { checkImageFile, readImageMeta } from '../src/lib/image-meta.js';
 import { MIGRATIONS, migrateContent } from '../src/lib/migrate.js';
-import { SCHEMA_VERSION, contentSchema, walkSchema } from '../src/lib/schema.js';
+import { FACT_IDS, GALLERY_IDS, SCHEMA_VERSION, contentSchema, walkSchema } from '../src/lib/schema.js';
 import { DRAFT_KEY, clearDraft, loadDraft, saveDraft } from '../src/lib/storage.js';
 import { exportContent, exportFileName, importContent } from '../src/lib/transfer.js';
 import { MAX_CONTENT_JSON_LENGTH, fieldAt, validateContent, validateField } from '../src/lib/validate.js';
@@ -253,15 +253,15 @@ describe('leitura de imagens (image-meta)', () => {
 
   test('checkImageFile: extensão, formato do campo, tamanho e dimensões', () => {
     const hero = fieldAt('hero.image');
-    assert.deepEqual(checkImageFile(png(1600, 1200), 'assets/img/hero.png', hero), []);
+    assert.deepEqual(checkImageFile(png(1200, 1600), 'assets/img/hero.png', hero), []);
     assert.match(
-      checkImageFile(png(1600, 1200), 'assets/img/hero.webp', hero).join(),
+      checkImageFile(png(1200, 1600), 'assets/img/hero.webp', hero).join(),
       /conteúdo é PNG, mas a extensão é \.webp/,
     );
-    assert.match(checkImageFile(png(640, 480), 'assets/img/hero.png', hero).join(), /mínimo 1200×1000/);
+    assert.match(checkImageFile(png(640, 480), 'assets/img/hero.png', hero).join(), /mínimo 600×1200/);
     assert.match(checkImageFile(png(6000, 4000), 'assets/img/hero.png', hero).join(), /máximo 4000×4000/);
     const big = new Uint8Array(hero.maxBytes + 1);
-    big.set(png(1600, 1200));
+    big.set(png(1200, 1600));
     assert.match(checkImageFile(big, 'assets/img/hero.png', hero).join(), /KB; máximo/);
     assert.match(
       checkImageFile(svg('<svg viewBox="0 0 2000 1500"></svg>'), 'assets/img/hero.svg', hero).join(),
@@ -272,11 +272,15 @@ describe('leitura de imagens (image-meta)', () => {
   test('checkContentImages confere existência com grafia exata e conteúdo do arquivo', async () => {
     const srcDir = join(tmp, 'src-images');
     mkdirSync(join(srcDir, 'assets', 'img'), { recursive: true });
-    writeFileSync(join(srcDir, 'assets', 'img', 'hero.png'), png(1600, 1200));
+    writeFileSync(join(srcDir, 'assets', 'img', 'hero.png'), png(1200, 1600));
     writeFileSync(join(srcDir, 'assets', 'img', 'Sobre.png'), png(1600, 1200));
     writeFileSync(join(srcDir, 'assets', 'img', 'falso.webp'), png(1600, 1200));
 
+    // Só as imagens deste teste: as demais ficam pendentes (src null).
     const content = loadDefaultContent();
+    walkSchema((field, path) => {
+      if (field.kind === 'image') getAt(content, path).src = null;
+    });
     content.hero.image.src = 'assets/img/hero.png';
     assert.deepEqual(await checkContentImages(content, srcDir), []);
 
@@ -590,7 +594,7 @@ describe('schema v2: enquadramento de imagens', () => {
     const result = importContent(JSON.stringify(v1()));
     assert.equal(result.ok, true, result.ok ? '' : JSON.stringify(result.errors));
     assert.equal(result.migratedFrom, 1);
-    assert.equal(result.value.schemaVersion, 2);
+    assert.equal(result.value.schemaVersion, SCHEMA_VERSION);
     for (const path of ['brand.logo', 'hero.image', 'about.image'])
       assert.equal(getAt(result.value, path).focus, 'center');
     assert.deepEqual(result.value.hero.image, { ...v1().hero.image, focus: 'center' }, 'demais valores preservados');
@@ -632,13 +636,15 @@ describe('schema v2: enquadramento de imagens', () => {
 
   test('enquadramento vira classe fixa na página (sem estilo inline)', async () => {
     const content = loadDefaultContent();
-    content.hero.image.focus = 'bottom';
+    content.hero.image = { ...content.hero.image, src: null, focus: 'bottom' };
+    content.about.gallery.scada.focus = 'top';
     const contentPath = join(tmp, 'focus.json');
     writeFileSync(contentPath, JSON.stringify(content));
     const outDir = join(tmp, 'focus-dist');
     await build({ outDir, contentPath, year: '2026' });
     const html = readFileSync(join(outDir, 'index.html'), 'utf8');
     assert.match(html, /class="media-fallback media__img media__img--focus-bottom"/);
+    assert.match(html, /<img src="[^"]*galeria-scada.webp"[^>]*class="media__img media__img--focus-top"/);
     assert.doesNotMatch(html, /\sstyle=/);
   });
 
@@ -654,5 +660,72 @@ describe('schema v2: enquadramento de imagens', () => {
       box('ftyp', [...ascii('avif'), 0, 0, 0, 0, ...ascii('mif1'), ...new Array(16).fill(0)]),
     );
     assert.throws(() => readImageMeta(noDims), /sem dimensões/);
+  });
+});
+
+describe('schema v3: redesign estrutural', () => {
+  // Conteúdo v2 equivalente ao publicado antes do redesign (fixture v1 migrada para v2).
+  const v2 = () => {
+    const v1 = JSON.parse(readFileSync(new URL('./fixtures/content-v1.json', import.meta.url), 'utf8'));
+    return MIGRATIONS[1](structuredClone(v1));
+  };
+
+  test('v2 → v3: títulos padrão divididos, campos novos preenchidos, validação estrita aprovada', () => {
+    const data = v2();
+    data.hero.title = 'Soluções técnicas para instalações industriais na Região Norte';
+    const result = importContent(JSON.stringify(data));
+    assert.equal(result.ok, true, result.ok ? '' : JSON.stringify(result.errors));
+    assert.equal(result.value.schemaVersion, SCHEMA_VERSION);
+    assert.equal(result.value.hero.title, 'Soluções técnicas para instalações industriais');
+    assert.equal(result.value.hero.titleAccent, 'na Região Norte');
+    assert.deepEqual(Object.keys(result.value.about.gallery), [...GALLERY_IDS]);
+    assert.deepEqual(Object.keys(result.value.about.facts), [...FACT_IDS]);
+    assert.equal(result.value.hero.image.src, data.hero.image.src, 'imagem existente preservada');
+  });
+
+  test('v2 → v3: título personalizado fica inteiro (destaque vazio), sem duplicar texto', () => {
+    const data = v2();
+    data.about.title = 'Um título escrito pelo cliente';
+    const result = importContent(JSON.stringify(data));
+    assert.equal(result.ok, true);
+    assert.equal(result.value.about.title, 'Um título escrito pelo cliente');
+    assert.equal(result.value.about.titleAccent, '');
+  });
+
+  test('v2 → v3 é defensiva com seções malformadas', () => {
+    const result = migrateContent({ schemaVersion: 2, hero: 'texto', about: null });
+    assert.equal(result.ok, true);
+    assert.equal(result.value.hero, 'texto', 'a validação posterior aponta o erro');
+    assert.equal(validateContent(result.value).ok, false);
+  });
+
+  test('mosaico e características têm quantidade fixa: o JSON não cria nem remove itens', () => {
+    for (const mutate of [
+      (c) => (c.about.gallery.extra = { src: null, alt: 'Nova', focus: 'center' }),
+      (c) => delete c.about.gallery.subestacao,
+      (c) => (c.about.facts.novo = { label: 'x', value: 'y' }),
+      (c) => delete c.about.facts.contato,
+      (c) => (c.about.gallery = []),
+      (c) => (c.hero.seal.link = 'https://exemplo.com'),
+    ]) {
+      const content = loadDefaultContent();
+      mutate(content);
+      assert.equal(validateContent(content).ok, false, String(mutate));
+    }
+  });
+
+  test('destaque de título aceita vazio, mas não HTML como marcação', async () => {
+    const content = loadDefaultContent();
+    content.hero.titleAccent = '';
+    content.about.titleAccent = '<b onmouseover="x()">ok</b>';
+    assert.equal(validateContent(content).ok, true);
+    const contentPath = join(tmp, 'accent.json');
+    writeFileSync(contentPath, JSON.stringify(content));
+    const outDir = join(tmp, 'accent-dist');
+    await build({ outDir, contentPath, year: '2026' });
+    const html = readFileSync(join(outDir, 'index.html'), 'utf8');
+    assert.match(html, /<span class="title-accent"><\/span><\/h1>/);
+    assert.match(html, /&lt;b onmouseover=&quot;x\(\)&quot;&gt;ok&lt;\/b&gt;/);
+    assert.doesNotMatch(html, /<b onmouseover/);
   });
 });

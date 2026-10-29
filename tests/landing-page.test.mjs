@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { after, before, describe, test } from 'node:test';
 import { build } from '../scripts/build.mjs';
-import { APPROACH_IDS, PAGE_SECTIONS, SERVICE_IDS } from '../src/lib/schema.js';
+import { APPROACH_IDS, FACT_IDS, GALLERY_IDS, PAGE_SECTIONS, SERVICE_IDS, walkSchema } from '../src/lib/schema.js';
 import { WHATSAPP, whatsappUrl } from '../src/lib/site.js';
 import { escapeHtml } from '../src/lib/template.js';
 import { checkPolicy } from '../src/lib/policy.js';
@@ -54,6 +54,46 @@ describe('estrutura aprovada', () => {
       anchors,
       PAGE_SECTIONS.filter((id) => id !== 'inicio'),
     );
+  });
+});
+
+describe('composição do redesign (referência de layout)', () => {
+  const section = (id) => {
+    const start = html.lastIndexOf('<section', html.indexOf(`id="${id}"`));
+    return html.slice(start, html.indexOf('</section>', start));
+  };
+
+  test('hero: texto, botão e composição em camadas (moldura, foto, foto em primeiro plano, selo)', () => {
+    const hero = section('inicio');
+    assert.match(hero, /class="hero theme-dark"/);
+    assert.match(hero, /<svg class="geometry"[^>]*aria-hidden="true"/);
+    for (const layer of ['hero__text', 'hero__frame', 'hero__photo', 'hero__detail', 'hero__seal']) {
+      assert.match(hero, new RegExp(`class="${layer}"`), layer);
+    }
+    assert.match(hero, /<h1[^>]*>[^<]+<span class="title-accent">[^<]+<\/span><\/h1>/);
+    assert.match(hero, /fetchpriority="high"/, 'foto principal priorizada (LCP)');
+    const { seal } = loadDefaultContent().hero;
+    assert.match(hero, new RegExp(`hero__seal-title">${seal.title}<`));
+  });
+
+  test('empresa: mosaico de 8 imagens à esquerda, conteúdo e 6 características à direita', () => {
+    const about = section('sobre');
+    assert.equal((about.match(/class="about__tile"/g) ?? []).length, 1 + GALLERY_IDS.length);
+    assert.ok(about.indexOf('about__mosaic') < about.indexOf('about__content'), 'mosaico antes do conteúdo');
+    const facts = [...about.matchAll(/data-fact="([^"]+)"/g)].map((m) => m[1]);
+    assert.deepEqual(facts, [...FACT_IDS]);
+    assert.match(about, /class="button button--primary" href="https:\/\/wa\.me\//);
+    // Só o 1º bloco de imagens (hero) é eager; o mosaico carrega sob demanda.
+    for (const [img] of about.matchAll(/<img\b[^>]*>/g)) assert.match(img, /loading="lazy"/);
+  });
+
+  test('toda seção com botão leva ao WhatsApp oficial (nenhum botão sem ação)', () => {
+    for (const id of ['inicio', 'sobre', 'servicos', 'atuacao', 'contato']) {
+      const buttons = [...section(id).matchAll(/class="button button--primary[^"]*" href="([^"]+)"/g)];
+      assert.ok(buttons.length > 0, id);
+      for (const [, href] of buttons) assert.equal(href, escapeHtml(whatsappUrl()), id);
+    }
+    assert.doesNotMatch(html, /href="#"/);
   });
 });
 
@@ -136,7 +176,9 @@ describe('interface', () => {
     for (const [img] of html.matchAll(/<img\b[^>]*>/g)) {
       assert.match(img, /\swidth="\d+"/);
       assert.match(img, /\sheight="\d+"/);
-      assert.match(img, /\salt="[^"]+"/);
+      // Único alt vazio permitido: o símbolo da marca, sempre ao lado do nome em texto.
+      if (/class="(?:brand__logo|hero__brand-mark)"/.test(img)) assert.match(img, /\salt=""/);
+      else assert.match(img, /\salt="[^"]+"/);
     }
     const fallbacks = (html.match(/class="media-fallback[^"]*" role="img" aria-label="[^"]+"/g) ?? []).length;
     assert.equal(fallbacks, placeholders.length);
@@ -144,10 +186,14 @@ describe('interface', () => {
 
   test('build informa as imagens pendentes', () => {
     const content = loadDefaultContent();
-    const expected = ['brand.logo', 'hero.image', 'about.image'].filter(
-      (path) => path.split('.').reduce((node, key) => node[key], content).src === null,
-    );
+    const expected = [];
+    walkSchema((field, path) => {
+      if (field.kind === 'image' && path.split('.').reduce((node, key) => node[key], content).src === null) {
+        expected.push(path);
+      }
+    });
     assert.deepEqual(placeholders, expected);
+    assert.deepEqual(placeholders, [], 'nenhuma imagem pendente');
   });
 });
 

@@ -15,41 +15,93 @@
   <body>
 {{> header}}
     <main id="conteudo" tabindex="-1">
-      <section class="hero" id="inicio" aria-labelledby="inicio-titulo">
+      <section class="hero theme-dark" id="inicio" aria-labelledby="inicio-titulo">
+{{> geometry}}
         <div class="hero__grid">
           <div class="hero__text">
-            <p class="eyebrow">{{content.hero.eyebrow}}</p>
-            <h1 class="hero__title" id="inicio-titulo">{{content.hero.title}}</h1>
-            <p class="lead">{{content.hero.text}}</p>
+            <p class="hero__brand">
+              {{image content.brand.logo width=150 height=160 class=hero__brand-mark loading=eager}}
+              <span class="hero__brand-name">{{content.brand.name}}</span>
+              <span class="hero__brand-tag">{{content.hero.eyebrow}}</span>
+            </p>
+            <h1 class="hero__title" id="inicio-titulo">{{content.hero.title}} <span class="title-accent">{{content.hero.titleAccent}}</span></h1>
+            <p class="hero__lead">{{content.hero.text}}</p>
             <a class="button button--primary" href="{{build.whatsappUrl}}" target="_blank" rel="noopener noreferrer">
               {{> icon-message}}
               <span>{{content.hero.cta}}<span class="visually-hidden"> {{content.a11y.newTab}}</span></span>
             </a>
           </div>
-          <figure class="media hero__media">
-            {{image content.hero.image width=1200 height=1500 class=media__img loading=eager fetchpriority=high}}
-          </figure>
-        </div>
-      </section>
-
-      <section class="section about" id="sobre" aria-labelledby="sobre-titulo">
-        <div class="container about__grid">
-          <figure class="media about__media">
-            {{image content.about.image width=1500 height=1000 class=media__img}}
-          </figure>
-          <div class="about__text">
-            <p class="eyebrow">{{content.about.eyebrow}}</p>
-            <h2 id="sobre-titulo">{{content.about.title}}</h2>
-            <p class="about__body">{{content.about.text}}</p>
+          <div class="hero__visual">
+            <span class="hero__frame" aria-hidden="true"></span>
+            <figure class="hero__photo">
+              {{image content.hero.image width=720 height=1440 class=media__img loading=eager fetchpriority=high}}
+            </figure>
+            <figure class="hero__detail">
+              {{image content.hero.detail width=600 height=750 class=media__img loading=eager}}
+            </figure>
+            <p class="hero__seal">
+              <span class="hero__seal-label">{{content.hero.seal.label}}</span>
+              <span class="hero__seal-title">{{content.hero.seal.title}}</span>
+              <span class="hero__seal-text">{{content.hero.seal.text}}</span>
+            </p>
           </div>
         </div>
       </section>
 
-      <section class="section services" id="servicos" aria-labelledby="servicos-titulo">
-        <div class="container services__grid">
-          <header class="section__header">
+      <section class="section about" id="sobre" aria-labelledby="sobre-titulo">
+        <div class="about__grid">
+          <ul class="about__mosaic">
+            <li class="about__tile">{{image content.about.image width=480 height=640 class=media__img}}</li>
+            <li class="about__tile">{{image content.about.gallery.scada width=480 height=640 class=media__img}}</li>
+            <li class="about__tile">{{image content.about.gallery.protecao width=480 height=640 class=media__img}}</li>
+            <li class="about__tile">{{image content.about.gallery.paineis width=480 height=640 class=media__img}}</li>
+            <li class="about__tile">{{image content.about.gallery.supervisao width=480 height=640 class=media__img}}</li>
+            <li class="about__tile">{{image content.about.gallery.transformador width=480 height=640 class=media__img}}</li>
+            <li class="about__tile">{{image content.about.gallery.infraestrutura width=480 height=640 class=media__img}}</li>
+            <li class="about__tile">{{image content.about.gallery.subestacao width=480 height=640 class=media__img}}</li>
+          </ul>
+          <div class="about__content">
+            <p class="eyebrow">{{content.about.eyebrow}}</p>
+            <h2 id="sobre-titulo">{{content.about.title}} <span class="title-accent">{{content.about.titleAccent}}</span></h2>
+            <p class="about__body">{{content.about.text}}</p>
+            <ul class="facts">
+              <li class="fact" data-fact="area">
+                <span class="fact__icon"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="7" y="7" width="10" height="10" rx="1.5"/><path d="M10 3v4M14 3v4M10 17v4M14 17v4M3 10h4M3 14h4M17 10h4M17 14h4"/></svg></span>
+                <span class="fact__text"><span class="fact__label">{{content.about.facts.area.label}}</span> <strong class="fact__value">{{content.about.facts.area.value}}</strong></span>
+              </li>
+              <li class="fact" data-fact="regiao">
+                <span class="fact__icon"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
+                <span class="fact__text"><span class="fact__label">{{content.about.facts.regiao.label}}</span> <strong class="fact__value">{{content.about.facts.regiao.value}}</strong></span>
+              </li>
+              <li class="fact" data-fact="servicos">
+                <span class="fact__icon"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="4" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1"/></svg></span>
+                <span class="fact__text"><span class="fact__label">{{content.about.facts.servicos.label}}</span> <strong class="fact__value">{{content.about.facts.servicos.value}}</strong></span>
+              </li>
+              <li class="fact" data-fact="ciclo">
+                <span class="fact__icon"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v4h-4"/><path d="M12 8v4l2.5 2"/></svg></span>
+                <span class="fact__text"><span class="fact__label">{{content.about.facts.ciclo.label}}</span> <strong class="fact__value">{{content.about.facts.ciclo.value}}</strong></span>
+              </li>
+              <li class="fact" data-fact="motores">
+                <span class="fact__icon"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="6" width="12" height="12" rx="2"/><path d="M17 12h4M2 9h3M2 15h3M9 6V4h4v2"/><circle cx="11" cy="12" r="2.5"/></svg></span>
+                <span class="fact__text"><span class="fact__label">{{content.about.facts.motores.label}}</span> <strong class="fact__value">{{content.about.facts.motores.value}}</strong></span>
+              </li>
+              <li class="fact" data-fact="contato">
+                <span class="fact__icon"><svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4h13A1.5 1.5 0 0 1 20 5.5v9a1.5 1.5 0 0 1-1.5 1.5H10l-4.5 4v-4h0A1.5 1.5 0 0 1 4 14.5z"/><path d="M8.5 9h7M8.5 12h4.5"/></svg></span>
+                <span class="fact__text"><span class="fact__label">{{content.about.facts.contato.label}}</span> <strong class="fact__value">{{content.about.facts.contato.value}}</strong></span>
+              </li>
+            </ul>
+            <a class="button button--primary" href="{{build.whatsappUrl}}" target="_blank" rel="noopener noreferrer">
+              <span>{{content.about.cta}}<span class="visually-hidden"> {{content.a11y.newTab}}</span></span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="section section--alt services" id="servicos" aria-labelledby="servicos-titulo">
+        <div class="container">
+          <header class="section__header section__header--center">
             <p class="eyebrow">{{content.services.eyebrow}}</p>
-            <h2 id="servicos-titulo">{{content.services.title}}</h2>
+            <h2 id="servicos-titulo">{{content.services.title}} <span class="title-accent">{{content.services.titleAccent}}</span></h2>
             <p class="lead">{{content.services.intro}}</p>
           </header>
           <ol class="service-list">
@@ -75,29 +127,35 @@
             <li class="service-list__item" data-service="treinamento-suporte">{{content.services.items.treinamento-suporte.title}}</li>
             <li class="service-list__item" data-service="rebobinagem-motores">{{content.services.items.rebobinagem-motores.title}}</li>
           </ol>
+          <p class="section__actions">
+            <a class="button button--primary" href="{{build.whatsappUrl}}" target="_blank" rel="noopener noreferrer">
+              <span>{{content.services.cta}}<span class="visually-hidden"> {{content.a11y.newTab}}</span></span>
+            </a>
+          </p>
         </div>
       </section>
 
-      <section class="section section--alt approach" id="abordagem" aria-labelledby="abordagem-titulo">
-        <div class="container">
-          <header class="section__header">
+      <section class="section approach" id="abordagem" aria-labelledby="abordagem-titulo">
+        <div class="container approach__grid">
+          <header class="approach__header">
             <p class="eyebrow">{{content.approach.eyebrow}}</p>
-            <h2 id="abordagem-titulo">{{content.approach.title}}</h2>
+            <h2 id="abordagem-titulo">{{content.approach.title}} <span class="title-accent">{{content.approach.titleAccent}}</span></h2>
+            <p class="approach__text">{{content.approach.text}}</p>
           </header>
           <ol class="approach-list">
-            <li class="approach-list__item" data-approach="ciclo-completo">
+            <li class="approach-list__item theme-dark" data-approach="ciclo-completo">
               <h3 class="approach-list__title">{{content.approach.items.ciclo-completo.title}}</h3>
               <p>{{content.approach.items.ciclo-completo.text}}</p>
             </li>
-            <li class="approach-list__item" data-approach="visao-integrada">
+            <li class="approach-list__item theme-dark" data-approach="visao-integrada">
               <h3 class="approach-list__title">{{content.approach.items.visao-integrada.title}}</h3>
               <p>{{content.approach.items.visao-integrada.text}}</p>
             </li>
-            <li class="approach-list__item" data-approach="modernizacao">
+            <li class="approach-list__item theme-dark" data-approach="modernizacao">
               <h3 class="approach-list__title">{{content.approach.items.modernizacao.title}}</h3>
               <p>{{content.approach.items.modernizacao.text}}</p>
             </li>
-            <li class="approach-list__item" data-approach="registro-tecnico">
+            <li class="approach-list__item theme-dark" data-approach="registro-tecnico">
               <h3 class="approach-list__title">{{content.approach.items.registro-tecnico.title}}</h3>
               <p>{{content.approach.items.registro-tecnico.text}}</p>
             </li>
@@ -106,29 +164,51 @@
       </section>
 
       <section class="section theme-dark area" id="atuacao" aria-labelledby="atuacao-titulo">
+{{> geometry}}
         <div class="container area__grid">
-          <p class="eyebrow">{{content.area.eyebrow}}</p>
-          <h2 class="area__title" id="atuacao-titulo">{{content.area.title}}</h2>
-          <p class="lead area__text">{{content.area.text}}</p>
+          <div class="area__text">
+            <p class="eyebrow">{{content.area.eyebrow}}</p>
+            <h2 class="area__title" id="atuacao-titulo">{{content.area.title}} <span class="title-accent">{{content.area.titleAccent}}</span></h2>
+            <p class="lead">{{content.area.text}}</p>
+            <a class="button button--primary" href="{{build.whatsappUrl}}" target="_blank" rel="noopener noreferrer">
+              <span>{{content.area.cta}}<span class="visually-hidden"> {{content.a11y.newTab}}</span></span>
+            </a>
+          </div>
+          <svg class="area__compass" width="400" height="400" viewBox="0 0 400 400" fill="none" aria-hidden="true" focusable="false">
+            <circle class="area__ring" cx="200" cy="200" r="184"/>
+            <circle class="area__ring area__ring--dashed" cx="200" cy="200" r="140"/>
+            <circle class="area__ring" cx="200" cy="200" r="64"/>
+            <path class="area__ring" d="M200 8v384M8 200h384M64 64l272 272M336 64 64 336"/>
+            <path class="area__needle" d="M200 44 224 200 200 216 176 200z"/>
+            <path class="area__needle area__needle--outline" d="M200 356 224 200 176 200z"/>
+            <circle class="area__hub" cx="200" cy="200" r="7"/>
+          </svg>
         </div>
       </section>
 
-      <section class="section contact" id="contato" aria-labelledby="contato-titulo">
-        <div class="container contact__grid">
-          <div class="contact__text">
-            <p class="eyebrow">{{content.contact.eyebrow}}</p>
-            <h2 id="contato-titulo">{{content.contact.title}}</h2>
-            <p class="lead">{{content.contact.text}}</p>
-          </div>
-          <div class="contact__action">
-            <a class="button button--primary button--lg" href="{{build.whatsappUrl}}" target="_blank" rel="noopener noreferrer">
-              {{> icon-message}}
-              <span>{{content.contact.cta}}<span class="visually-hidden"> {{content.a11y.newTab}}</span></span>
-            </a>
-            <p class="contact__number">
-              <span class="contact__label">{{content.contact.whatsappLabel}}</span>
-              <a href="{{build.whatsappUrl}}" target="_blank" rel="noopener noreferrer">{{build.whatsappDisplay}}<span class="visually-hidden"> {{content.a11y.newTab}}</span></a>
-            </p>
+      <section class="contact" id="contato" aria-labelledby="contato-titulo">
+        <figure class="contact__band">
+          {{image content.contact.image width=1920 height=800 class=media__img}}
+        </figure>
+        <div class="contact__stage theme-dark">
+          <div class="container">
+            <div class="contact__card theme-light">
+              <div class="contact__text">
+                <p class="eyebrow">{{content.contact.eyebrow}}</p>
+                <h2 id="contato-titulo">{{content.contact.title}} <span class="title-accent">{{content.contact.titleAccent}}</span></h2>
+                <p class="lead">{{content.contact.text}}</p>
+              </div>
+              <div class="contact__panel theme-dark">
+                <p class="contact__number">
+                  <span class="contact__label">{{content.contact.whatsappLabel}}</span>
+                  <a href="{{build.whatsappUrl}}" target="_blank" rel="noopener noreferrer">{{build.whatsappDisplay}}<span class="visually-hidden"> {{content.a11y.newTab}}</span></a>
+                </p>
+                <a class="button button--primary button--lg" href="{{build.whatsappUrl}}" target="_blank" rel="noopener noreferrer">
+                  {{> icon-message}}
+                  <span>{{content.contact.cta}}<span class="visually-hidden"> {{content.a11y.newTab}}</span></span>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </section>

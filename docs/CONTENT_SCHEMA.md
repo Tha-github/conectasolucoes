@@ -153,13 +153,13 @@ Gerado a partir de `schema.js` e `content.json`. Um teste falha se esta seção 
 <!-- prettier-ignore-start -->
 <!-- inventario:inicio (gerado por npm run docs:schema; não edite à mão) -->
 
-Total de campos editáveis: **85**.
+Total de campos editáveis: **119**.
 
 #### `(raiz)` — Controle
 
 | Caminho | Campo | Regra |
 | ------- | ----- | ----- |
-| `schemaVersion` | Versão do schema | fixo: `2` |
+| `schemaVersion` | Versão do schema | fixo: `3` |
 
 #### `meta` — Metadados (busca e compartilhamento)
 
@@ -175,7 +175,7 @@ Total de campos editáveis: **85**.
 | `brand.name` | Marca › Nome da empresa | texto, 1–40 caracteres, uma linha |
 | `brand.tagline` | Marca › Área de atuação (rodapé) | texto, 1–80 caracteres, uma linha |
 | `brand.region` | Marca › Região de atendimento (rodapé) | texto, 1–60 caracteres, uma linha |
-| `brand.logo` | Marca › Logotipo | imagem: svg/png/webp/avif, até 200 KB, 120×32 a 2000×1000 px; alt até 60 |
+| `brand.logo` | Marca › Símbolo da marca (ao lado do nome) | imagem: svg/png/webp/avif, até 200 KB, 120×32 a 2000×1000 px; alt até 60 |
 
 #### `a11y` — Textos de acessibilidade
 
@@ -202,27 +202,55 @@ Total de campos editáveis: **85**.
 | Caminho | Campo | Regra |
 | ------- | ----- | ----- |
 | `hero.eyebrow` | Destaque principal › Rótulo | texto, 1–50 caracteres, uma linha |
-| `hero.title` | Destaque principal › Título principal | texto, 1–80 caracteres, uma linha |
+| `hero.title` | Destaque principal › Título principal (parte em branco) | texto, 1–80 caracteres, uma linha |
+| `hero.titleAccent` | Destaque principal › Título principal (parte em dourado; pode ficar vazio) | texto, 0–60 caracteres, uma linha |
 | `hero.text` | Destaque principal › Texto de apoio | texto, 1–220 caracteres, uma linha |
 | `hero.cta` | Destaque principal › Botão | texto, 1–32 caracteres, uma linha |
-| `hero.image` | Destaque principal › Imagem do destaque | imagem: webp/jpg/png/avif, até 800 KB, 1200×1000 a 4000×4000 px; alt até 160 |
+| `hero.image` | Destaque principal › Imagem principal do destaque | imagem: webp/jpg/png/avif, até 800 KB, 600×1200 a 4000×4000 px; alt até 160 |
+| `hero.detail` | Destaque principal › Imagem em primeiro plano do destaque | imagem: webp/jpg/png/avif, até 600 KB, 600×750 a 4000×4000 px; alt até 160 |
+| `hero.seal.label` | Destaque principal › Selo circular › Linha superior | texto, 1–20 caracteres, uma linha |
+| `hero.seal.title` | Destaque principal › Selo circular › Destaque | texto, 1–24 caracteres, uma linha |
+| `hero.seal.text` | Destaque principal › Selo circular › Linha inferior | texto, 1–30 caracteres, uma linha |
 
 #### `about` — Empresa
 
 | Caminho | Campo | Regra |
 | ------- | ----- | ----- |
 | `about.eyebrow` | Empresa › Rótulo | texto, 1–40 caracteres, uma linha |
-| `about.title` | Empresa › Título | texto, 1–80 caracteres, uma linha |
+| `about.title` | Empresa › Título (parte leve) | texto, 1–80 caracteres, uma linha |
+| `about.titleAccent` | Empresa › Título (parte em destaque; pode ficar vazio) | texto, 0–60 caracteres, uma linha |
 | `about.text` | Empresa › Texto de apresentação | texto, 1–500 caracteres, uma linha |
-| `about.image` | Empresa › Imagem da empresa | imagem: webp/jpg/png/avif, até 600 KB, 1000×650 a 4000×4000 px; alt até 160 |
+| `about.cta` | Empresa › Botão | texto, 1–32 caracteres, uma linha |
+| `about.image` | Empresa › Mosaico: imagem 1 | imagem: webp/jpg/png/avif, até 600 KB, 480×640 a 4000×4000 px; alt até 160 |
+| `about.gallery.scada` | Empresa › Mosaico: demais imagens (fixas: 7) › Mosaico: imagem 2 | imagem: webp/jpg/png/avif, até 600 KB, 480×640 a 4000×4000 px; alt até 160 |
+| `about.gallery.protecao` | Empresa › Mosaico: demais imagens (fixas: 7) › Mosaico: imagem 3 | imagem: webp/jpg/png/avif, até 600 KB, 480×640 a 4000×4000 px; alt até 160 |
+| `about.gallery.paineis` | Empresa › Mosaico: demais imagens (fixas: 7) › Mosaico: imagem 4 | imagem: webp/jpg/png/avif, até 600 KB, 480×640 a 4000×4000 px; alt até 160 |
+| `about.gallery.supervisao` | Empresa › Mosaico: demais imagens (fixas: 7) › Mosaico: imagem 5 | imagem: webp/jpg/png/avif, até 600 KB, 480×640 a 4000×4000 px; alt até 160 |
+| `about.gallery.transformador` | Empresa › Mosaico: demais imagens (fixas: 7) › Mosaico: imagem 6 | imagem: webp/jpg/png/avif, até 600 KB, 480×640 a 4000×4000 px; alt até 160 |
+| `about.gallery.infraestrutura` | Empresa › Mosaico: demais imagens (fixas: 7) › Mosaico: imagem 7 | imagem: webp/jpg/png/avif, até 600 KB, 480×640 a 4000×4000 px; alt até 160 |
+| `about.gallery.subestacao` | Empresa › Mosaico: demais imagens (fixas: 7) › Mosaico: imagem 8 | imagem: webp/jpg/png/avif, até 600 KB, 480×640 a 4000×4000 px; alt até 160 |
+| `about.facts.area.label` | Empresa › Características (fixas: 6) › Característica 01 › Rótulo | texto, 1–24 caracteres, uma linha |
+| `about.facts.area.value` | Empresa › Características (fixas: 6) › Característica 01 › Valor em destaque | texto, 1–32 caracteres, uma linha |
+| `about.facts.regiao.label` | Empresa › Características (fixas: 6) › Característica 02 › Rótulo | texto, 1–24 caracteres, uma linha |
+| `about.facts.regiao.value` | Empresa › Características (fixas: 6) › Característica 02 › Valor em destaque | texto, 1–32 caracteres, uma linha |
+| `about.facts.servicos.label` | Empresa › Características (fixas: 6) › Característica 03 › Rótulo | texto, 1–24 caracteres, uma linha |
+| `about.facts.servicos.value` | Empresa › Características (fixas: 6) › Característica 03 › Valor em destaque | texto, 1–32 caracteres, uma linha |
+| `about.facts.ciclo.label` | Empresa › Características (fixas: 6) › Característica 04 › Rótulo | texto, 1–24 caracteres, uma linha |
+| `about.facts.ciclo.value` | Empresa › Características (fixas: 6) › Característica 04 › Valor em destaque | texto, 1–32 caracteres, uma linha |
+| `about.facts.motores.label` | Empresa › Características (fixas: 6) › Característica 05 › Rótulo | texto, 1–24 caracteres, uma linha |
+| `about.facts.motores.value` | Empresa › Características (fixas: 6) › Característica 05 › Valor em destaque | texto, 1–32 caracteres, uma linha |
+| `about.facts.contato.label` | Empresa › Características (fixas: 6) › Característica 06 › Rótulo | texto, 1–24 caracteres, uma linha |
+| `about.facts.contato.value` | Empresa › Características (fixas: 6) › Característica 06 › Valor em destaque | texto, 1–32 caracteres, uma linha |
 
 #### `services` — Serviços
 
 | Caminho | Campo | Regra |
 | ------- | ----- | ----- |
 | `services.eyebrow` | Serviços › Rótulo | texto, 1–40 caracteres, uma linha |
-| `services.title` | Serviços › Título | texto, 1–60 caracteres, uma linha |
+| `services.title` | Serviços › Título (parte leve) | texto, 1–60 caracteres, uma linha |
+| `services.titleAccent` | Serviços › Título (parte em destaque; pode ficar vazio) | texto, 0–40 caracteres, uma linha |
 | `services.intro` | Serviços › Introdução | texto, 1–220 caracteres, uma linha |
+| `services.cta` | Serviços › Botão | texto, 1–32 caracteres, uma linha |
 | `services.items.automacao-industrial.title` | Serviços › Lista de serviços (fixa: 21 itens) › Serviço 01 › Nome do serviço | texto, 1–50 caracteres, uma linha |
 | `services.items.automacao-cag-hvac.title` | Serviços › Lista de serviços (fixa: 21 itens) › Serviço 02 › Nome do serviço | texto, 1–50 caracteres, uma linha |
 | `services.items.automacao-subestacoes.title` | Serviços › Lista de serviços (fixa: 21 itens) › Serviço 03 › Nome do serviço | texto, 1–50 caracteres, uma linha |
@@ -250,7 +278,9 @@ Total de campos editáveis: **85**.
 | Caminho | Campo | Regra |
 | ------- | ----- | ----- |
 | `approach.eyebrow` | Abordagem › Rótulo | texto, 1–40 caracteres, uma linha |
-| `approach.title` | Abordagem › Título | texto, 1–60 caracteres, uma linha |
+| `approach.title` | Abordagem › Título (parte leve) | texto, 1–60 caracteres, uma linha |
+| `approach.titleAccent` | Abordagem › Título (parte em destaque; pode ficar vazio) | texto, 0–40 caracteres, uma linha |
+| `approach.text` | Abordagem › Texto de apresentação | texto, 1–240 caracteres, uma linha |
 | `approach.items.ciclo-completo.title` | Abordagem › Itens (fixos: 4) › Item 01 › Título do item | texto, 1–40 caracteres, uma linha |
 | `approach.items.ciclo-completo.text` | Abordagem › Itens (fixos: 4) › Item 01 › Texto | texto, 1–200 caracteres, uma linha |
 | `approach.items.visao-integrada.title` | Abordagem › Itens (fixos: 4) › Item 02 › Título do item | texto, 1–40 caracteres, uma linha |
@@ -265,18 +295,22 @@ Total de campos editáveis: **85**.
 | Caminho | Campo | Regra |
 | ------- | ----- | ----- |
 | `area.eyebrow` | Área de atuação › Rótulo | texto, 1–40 caracteres, uma linha |
-| `area.title` | Área de atuação › Título | texto, 1–40 caracteres, uma linha |
+| `area.title` | Área de atuação › Título (parte em branco) | texto, 1–40 caracteres, uma linha |
+| `area.titleAccent` | Área de atuação › Título (parte em dourado; pode ficar vazio) | texto, 0–30 caracteres, uma linha |
 | `area.text` | Área de atuação › Texto | texto, 1–260 caracteres, uma linha |
+| `area.cta` | Área de atuação › Botão | texto, 1–32 caracteres, uma linha |
 
 #### `contact` — Contato
 
 | Caminho | Campo | Regra |
 | ------- | ----- | ----- |
 | `contact.eyebrow` | Contato › Rótulo | texto, 1–40 caracteres, uma linha |
-| `contact.title` | Contato › Título | texto, 1–80 caracteres, uma linha |
+| `contact.title` | Contato › Título (parte leve) | texto, 1–80 caracteres, uma linha |
+| `contact.titleAccent` | Contato › Título (parte em destaque; pode ficar vazio) | texto, 0–50 caracteres, uma linha |
 | `contact.text` | Contato › Texto | texto, 1–220 caracteres, uma linha |
 | `contact.cta` | Contato › Botão | texto, 1–32 caracteres, uma linha |
 | `contact.whatsappLabel` | Contato › Rótulo do número | texto, 1–20 caracteres, uma linha |
+| `contact.image` | Contato › Imagem da faixa do contato | imagem: webp/jpg/png/avif, até 600 KB, 1600×600 a 4000×4000 px; alt até 160 |
 
 #### `notFound` — Página 404
 
@@ -300,11 +334,11 @@ Total de campos editáveis: **85**.
 | `theme.colors.borderStrong` | Tema › Cores (chaves fixas, formato #RRGGBB) › Bordas de controles | cor `#RRGGBB` + contraste |
 | `theme.colors.primary` | Tema › Cores (chaves fixas, formato #RRGGBB) › Cor de ação (botões, foco) | cor `#RRGGBB` + contraste |
 | `theme.colors.onPrimary` | Tema › Cores (chaves fixas, formato #RRGGBB) › Texto sobre a cor de ação | cor `#RRGGBB` + contraste |
-| `theme.colors.accent` | Tema › Cores (chaves fixas, formato #RRGGBB) › Destaque (filetes e numeração) | cor `#RRGGBB` + contraste |
-| `theme.colors.dark` | Tema › Cores (chaves fixas, formato #RRGGBB) › Fundo escuro (atuação, rodapé) | cor `#RRGGBB` + contraste |
+| `theme.colors.accent` | Tema › Cores (chaves fixas, formato #RRGGBB) › Destaque claro (vinho: títulos em destaque, ícones) | cor `#RRGGBB` + contraste |
+| `theme.colors.dark` | Tema › Cores (chaves fixas, formato #RRGGBB) › Fundo escuro (vinho: destaque, atuação, rodapé) | cor `#RRGGBB` + contraste |
 | `theme.colors.onDark` | Tema › Cores (chaves fixas, formato #RRGGBB) › Texto sobre fundo escuro | cor `#RRGGBB` + contraste |
 | `theme.colors.onDarkMuted` | Tema › Cores (chaves fixas, formato #RRGGBB) › Texto secundário sobre fundo escuro | cor `#RRGGBB` + contraste |
-| `theme.colors.accentOnDark` | Tema › Cores (chaves fixas, formato #RRGGBB) › Destaque sobre fundo escuro | cor `#RRGGBB` + contraste |
+| `theme.colors.accentOnDark` | Tema › Cores (chaves fixas, formato #RRGGBB) › Destaque sobre fundo escuro (dourado dos títulos) | cor `#RRGGBB` + contraste |
 
 <!-- inventario:fim -->
 <!-- prettier-ignore-end -->

@@ -49,7 +49,9 @@ const json = (value) => `${JSON.stringify(value, null, 2)}\n`;
 describe('validação do pipeline (validate:publish)', () => {
   const srcDir = join(tmp, 'src');
   mkdirSync(join(srcDir, 'assets', 'img'), { recursive: true });
-  writeFileSync(join(srcDir, 'assets', 'img', 'hero-ok.png'), png(1600, 1200));
+  // Fotografias publicadas (referenciadas pelo conteúdo padrão) + casos de teste.
+  cpSync(join(ROOT, 'src', 'assets', 'img'), join(srcDir, 'assets', 'img'), { recursive: true });
+  writeFileSync(join(srcDir, 'assets', 'img', 'hero-ok.png'), png(1000, 1600));
   writeFileSync(join(srcDir, 'assets', 'img', 'hero-pequena.png'), png(400, 300));
   writeFileSync(
     join(srcDir, 'assets', 'img', 'logo-inseguro.svg'),
@@ -95,7 +97,7 @@ describe('validação do pipeline (validate:publish)', () => {
       /hero\.image\.src: deve ser null ou um caminho/,
     ],
     ['imagem inexistente', (c) => (c.hero.image.src = 'assets/img/nao-existe.png'), /arquivo não encontrado/],
-    ['imagem pequena demais', (c) => (c.hero.image.src = 'assets/img/hero-pequena.png'), /mínimo 1200×1000/],
+    ['imagem pequena demais', (c) => (c.hero.image.src = 'assets/img/hero-pequena.png'), /mínimo 600×1200/],
     ['SVG com script', (c) => (c.brand.logo.src = 'assets/img/logo-inseguro.svg'), /SVG inseguro/],
     ['texto acima do limite', (c) => (c.area.title = 'x'.repeat(41)), /area\.title: máximo de 40/],
     ['cor sem contraste', (c) => (c.theme.colors.text = '#DDDDDD'), /contraste insuficiente/],

@@ -17,6 +17,74 @@ const V1_IMAGE_PATHS = [
   ['about', 'image'],
 ];
 
+/** Títulos padrão da versão 2 → [título v2, parte leve v3, destaque v3]. */
+const V2_TITLE_SPLITS = {
+  hero: [
+    'Soluções técnicas para instalações industriais na Região Norte',
+    'Soluções técnicas para instalações industriais',
+    'na Região Norte',
+  ],
+  about: [
+    'Engenharia e automação aplicadas à operação industrial',
+    'Engenharia e automação',
+    'aplicadas à operação industrial',
+  ],
+  services: ['Do projeto à manutenção', 'Do projeto', 'à manutenção'],
+  approach: ['Atuação técnica e integrada', 'Atuação técnica', 'e integrada'],
+  area: ['Região Norte do Brasil', 'Região Norte', 'do Brasil'],
+  contact: ['Vamos conversar sobre a sua instalação?', 'Vamos conversar sobre', 'a sua instalação?'],
+};
+
+const v3Image = (src, alt) => ({ src: `assets/img/${src}`, alt, focus: 'center' });
+
+/** Campos criados na versão 3, com os valores publicados naquela versão (fixos). */
+const V3_ADDITIONS = {
+  hero: {
+    detail: v3Image('hero-sala-eletrica.webp', 'Sala elétrica com painéis de média tensão alinhados'),
+    seal: { label: 'Atendimento', title: 'Região Norte', text: 'do Brasil' },
+  },
+  about: {
+    cta: 'Falar com a equipe',
+    gallery: {
+      scada: v3Image('galeria-scada.webp', 'Estação de supervisão com telas de processo de uma central de água gelada'),
+      protecao: v3Image(
+        'galeria-protecao.webp',
+        'Dispositivos de proteção e controle montados em trilho, com fiação identificada',
+      ),
+      paineis: v3Image('galeria-paineis.webp', 'Painel elétrico com medidores, sinalizadores e chaves de comando'),
+      supervisao: v3Image('galeria-supervisao.webp', 'Sala de controle com mesa de operação e telas de supervisão'),
+      transformador: v3Image(
+        'galeria-transformador.webp',
+        'Transformadores de potência instalados em ambiente abrigado',
+      ),
+      infraestrutura: v3Image(
+        'galeria-infraestrutura.webp',
+        'Eletrocalhas e leitos de cabos fixados no teto de uma instalação',
+      ),
+      subestacao: v3Image('galeria-subestacao.webp', 'Transformador de alta tensão no pátio de uma subestação'),
+    },
+    facts: {
+      area: { label: 'Área', value: 'Engenharia e automação' },
+      regiao: { label: 'Região', value: 'Norte do Brasil' },
+      servicos: { label: 'Serviços', value: '21 frentes técnicas' },
+      ciclo: { label: 'Atuação', value: 'Do projeto ao suporte' },
+      motores: { label: 'Motores elétricos', value: 'Rebobinagem' },
+      contato: { label: 'Contato', value: 'Pelo WhatsApp' },
+    },
+  },
+  services: { cta: 'Consultar um serviço' },
+  approach: {
+    text: 'Automação, elétrica e instrumentação tratadas em conjunto, em todas as etapas da vida de uma instalação industrial.',
+  },
+  area: { cta: 'Consultar disponibilidade' },
+  contact: {
+    image: v3Image(
+      'contato-planta-industrial.webp',
+      'Vista aérea de uma planta industrial com tubulações, tanques e estruturas metálicas',
+    ),
+  },
+};
+
 export const MIGRATIONS = Object.freeze({
   // v1 → v2: imagens ganham "focus" (enquadramento). Valor neutro: "center".
   // Defensiva: dados não confiáveis; estruturas inesperadas ficam como estão
@@ -29,6 +97,25 @@ export const MIGRATIONS = Object.freeze({
       }
     }
     return { ...data, schemaVersion: 2 };
+  },
+
+  // v2 → v3: redesign estrutural. Títulos padrão da v2 são divididos entre a
+  // parte leve e a parte em destaque; títulos personalizados ficam inteiros
+  // (destaque vazio). Campos novos recebem os valores publicados com a v3.
+  2: (data) => {
+    for (const [group, values] of Object.entries(V3_ADDITIONS)) {
+      const section = data[group];
+      if (!section || typeof section !== 'object' || Array.isArray(section)) continue;
+      const split = V2_TITLE_SPLITS[group];
+      if (split && !Object.hasOwn(section, 'titleAccent')) {
+        if (section.title === split[0]) [section.title, section.titleAccent] = split.slice(1);
+        else section.titleAccent = '';
+      }
+      for (const [key, value] of Object.entries(values)) {
+        if (!Object.hasOwn(section, key)) section[key] = structuredClone(value);
+      }
+    }
+    return { ...data, schemaVersion: 3 };
   },
 });
 

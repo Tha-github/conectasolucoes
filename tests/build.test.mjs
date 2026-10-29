@@ -42,10 +42,9 @@ describe('build de produção (site de projeto em /conecta-site)', () => {
       'css/tokens.css',
       'js/main.js',
       'js/header.js',
-      'assets/fonts/cormorant-garamond-latin-wght-normal.woff2',
-      'assets/fonts/cormorant-garamond-latin-wght-italic.woff2',
+      'assets/fonts/outfit-latin-wght-normal.woff2',
       'assets/fonts/manrope-latin-wght-normal.woff2',
-      'assets/fonts/LICENSE-Cormorant-Garamond.txt',
+      'assets/fonts/LICENSE-Outfit.txt',
       'assets/fonts/LICENSE-Manrope.txt',
     ]) {
       assert.ok(existsSync(join(outDir, file)), `ausente: ${file}`);
@@ -121,9 +120,14 @@ describe('build de produção (site de projeto em /conecta-site)', () => {
     assert.match(css, new RegExp(`--color-on-primary: ${colors.onPrimary};`));
   });
 
-  test('sem logotipo, o cabeçalho mostra o nome da marca em texto', () => {
+  test('cabeçalho: símbolo oficial decorativo ao lado do nome da marca em texto', () => {
     const html = readFileSync(join(outDir, 'index.html'), 'utf8');
-    assert.match(html, /class="media-fallback brand__logo" role="img" aria-label="Conecta Soluções"/);
+    assert.match(
+      html,
+      /<a class="brand" href="[^"]*">\s*<img src="[^"]*assets\/img\/simbolo\.png" alt=""[^>]*class="brand__logo"[^>]*>\s*<span class="brand__name">Conecta Soluções<\/span>/,
+    );
+    assert.match(html, /<link rel="icon" href="[^"]*assets\/favicon\.png"/);
+    assert.ok(existsSync(join(outDir, 'assets', 'favicon.png')));
   });
 });
 

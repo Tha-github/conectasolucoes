@@ -49,7 +49,7 @@ describe('estrutura', () => {
 
   test('rejeita schemaVersion diferente', () => {
     assert.deepEqual(
-      errorsAfter((c) => (c.schemaVersion = 3)),
+      errorsAfter((c) => (c.schemaVersion = 4)),
       ['schemaVersion'],
     );
   });
@@ -137,10 +137,18 @@ describe('imagens', () => {
     );
   });
 
-  test('exige texto alternativo', () => {
+  test('exige texto alternativo nas fotografias; o símbolo ao lado do nome pode ser decorativo', () => {
+    assert.deepEqual(
+      errorsAfter((c) => (c.hero.image.alt = '')),
+      ['hero.image.alt'],
+    );
+    assert.deepEqual(
+      errorsAfter((c) => (c.about.gallery.scada.alt = '  ')),
+      ['about.gallery.scada.alt'],
+    );
     assert.deepEqual(
       errorsAfter((c) => (c.brand.logo.alt = '')),
-      ['brand.logo.alt'],
+      [],
     );
   });
 

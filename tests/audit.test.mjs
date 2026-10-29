@@ -71,8 +71,9 @@ describe('metadados gerados', () => {
   });
 
   test('Twitter Card e og:image: imagem só quando existe fotografia publicada e URL conhecida', () => {
-    assert.match(seoHead(content, 'https://exemplo.com/'), /<meta name="twitter:card" content="summary">/);
-    assert.doesNotMatch(seoHead(content, 'https://exemplo.com/'), /og:image/, 'sem fotografia, sem og:image');
+    const semFoto = { ...content, hero: { ...content.hero, image: { ...content.hero.image, src: null } } };
+    assert.match(seoHead(semFoto, 'https://exemplo.com/'), /<meta name="twitter:card" content="summary">/);
+    assert.doesNotMatch(seoHead(semFoto, 'https://exemplo.com/'), /og:image/, 'sem fotografia, sem og:image');
     const comFoto = {
       ...content,
       hero: { ...content.hero, image: { src: 'assets/img/hero.webp', alt: 'Painel "A"', focus: 'center' } },

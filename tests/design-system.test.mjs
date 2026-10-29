@@ -78,7 +78,7 @@ test('sem gradientes, glassmorphism ou fontes externas', () => {
 test('fontes usam font-display: swap e arquivos locais', () => {
   const fonts = readCss('fonts.css');
   const faces = fonts.match(/@font-face\s*\{[^}]*\}/g) ?? [];
-  assert.equal(faces.length, 3);
+  assert.equal(faces.length, 2);
   for (const face of faces) {
     assert.match(face, /font-display:\s*swap/);
     assert.match(face, /src:\s*url\('\.\.\/assets\/fonts\/[a-z0-9-]+\.woff2'\)/);
@@ -95,11 +95,30 @@ test('cabeçalho: estado ao rolar só muda cor/filete, nunca a altura (sem salto
   assert.doesNotMatch(js, /innerHTML|style\./);
 });
 
-test('títulos usam a serifa editorial e o texto a sans; nenhuma fonte antiga referenciada', () => {
+test('títulos usam a Outfit e o texto a Manrope; nenhuma fonte antiga referenciada', () => {
   const tokens = readCss('tokens.css');
-  assert.match(tokens, /--font-display:\s*'Cormorant Garamond'/);
+  assert.match(tokens, /--font-display:\s*'Outfit'/);
   assert.match(tokens, /--font-sans:\s*'Manrope'/);
-  assert.doesNotMatch(allCss, /Archivo|IBM Plex|font-stretch/);
+  assert.doesNotMatch(allCss, /Cormorant|Archivo|IBM Plex|font-stretch/);
+});
+
+test('destaque do título: mais peso que a parte leve e cor por contexto (não só cor)', () => {
+  const base = readCss('base.css');
+  assert.match(
+    base,
+    /\.title-accent\s*\{[^}]*color:\s*var\(--heading-accent\)[^}]*font-weight:\s*var\(--weight-accent\)/,
+  );
+  assert.match(base, /\.title-accent:empty\s*\{[^}]*display:\s*none/);
+});
+
+test('botões em cápsula; hero em camadas sobrepostas; mosaico 4 × 2', () => {
+  assert.match(readCss('tokens.css'), /--radius-button:\s*var\(--radius-pill\)/);
+  assert.match(readCss('components.css'), /\.button\s*\{[^}]*border-radius:\s*var\(--radius-button\)/);
+  const sections = readCss('sections.css');
+  for (const layer of ['hero__frame', 'hero__photo', 'hero__detail', 'hero__seal']) {
+    assert.match(sections, new RegExp(`\\.${layer}\\s*\\{[^}]*position:\\s*absolute`), layer);
+  }
+  assert.match(sections, /\.about__mosaic\s*\{[^}]*grid-template-columns:\s*repeat\(4,/);
 });
 
 test('o grid responde a 4, 8 e 12 colunas', () => {

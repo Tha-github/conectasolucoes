@@ -59,6 +59,12 @@ Observações:
 - Quebras de linha coladas viram espaço.
 - Campo vazio fica marcado em vermelho e impede salvar ou exportar.
 - **HTML não funciona.** `<b>`, `<script>` e similares aparecem literalmente como texto.
+- **Títulos em duas partes.** Os títulos principais têm a parte leve (campo "Título") e a parte em destaque (campo
+  "… parte em destaque" ou "… parte em dourado"), exibida com mais peso e, no fundo vinho, em dourado. A parte em
+  destaque pode ficar vazia; nesse caso o título aparece inteiro no estilo leve.
+- **Selo e características.** O selo circular do destaque (3 linhas) e as 6 características da área Empresa
+  (rótulo + valor) são textos fixos em quantidade e posição: dá para reescrever, não para criar ou remover itens.
+  Os ícones das características são fixos no código.
 - Os nomes dos 21 serviços podem ser ajustados, mas cada um deve continuar descrevendo o mesmo serviço. A
   verificação de publicação recusa, por exemplo, trocar "Rebobinagem de Motores Elétricos" por outro assunto.
 - A verificação de publicação também recusa anos de mercado, números de desempenho, certificações, garantias, preços,
@@ -67,8 +73,9 @@ Observações:
 
 ## 2. Substituir imagens
 
-Cada imagem do site ocupa um **espaço fixo**: logotipo, destaque principal e empresa. O painel troca a imagem
-desses espaços, mas não cria imagens novas nem muda posições.
+Cada imagem do site ocupa um **espaço fixo** (12 no total): símbolo da marca; imagem principal e imagem em primeiro
+plano do destaque; as 8 imagens do mosaico da Empresa (imagem 1 e "demais imagens" 2 a 8); e a faixa do Contato. O
+painel troca a imagem desses espaços, mas não cria imagens novas, não remove peças do mosaico e não muda posições.
 
 1. No campo da imagem, clique em **Substituir imagem** e escolha o arquivo.
    - Aceitos: **JPEG, PNG, WebP e AVIF**, com até 15 MB.
@@ -78,12 +85,14 @@ desses espaços, mas não cria imagens novas nem muda posições.
 3. Imagens maiores que o necessário são **reduzidas sem distorcer** e convertidas para **WebP**. Isso também remove
    dados da câmera e de localização (GPS). O diálogo mostra o antes e o depois.
 4. No diálogo **Substituir imagem**:
-   - confira a foto **nas molduras em que ela aparece**. O destaque principal, por exemplo, mostra Computador (4:5)
-     e Celular e tablet (3:2);
+   - confira a foto **nas molduras em que ela aparece**. A imagem principal do destaque é um recorte vertical
+     estreito (cerca de 1:2, com a aresta esquerda inclinada); a de primeiro plano é 4:5; as do mosaico, 3:4; a faixa
+     do Contato, 12:5 no computador e 3:2 no celular;
    - escolha o **enquadramento** (Centro, Topo, Base, Esquerda ou Direita), que define a parte da foto que continua
      visível quando a moldura corta;
    - escreva o **texto alternativo**, descrevendo a foto para quem usa leitor de tela. Exemplo: "Técnico
-     inspecionando painel elétrico com câmera termográfica". Ele é obrigatório;
+     inspecionando painel elétrico com câmera termográfica". Ele é obrigatório nas fotografias. No **símbolo da
+     marca** ele fica vazio de propósito, porque o nome da empresa já aparece em texto ao lado;
    - clique em **Aplicar ao rascunho**. **Cancelar** (ou Escape) descarta tudo.
 5. A imagem aparece na prévia e fica guardada **neste navegador**, com um nome como
    `hero-image-20261029-111136.webp`. O enquadramento pode ser trocado depois, sem reenviar a foto.

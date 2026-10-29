@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "meta": {
     "title": "Conecta Soluções | Engenharia, Automação e Sistemas Industriais",
     "description": "Engenharia, automação e sistemas industriais na Região Norte do Brasil. Fale com a Conecta Soluções pelo WhatsApp."
@@ -9,8 +9,8 @@
     "tagline": "Engenharia, Automação e Sistemas Industriais",
     "region": "Atendimento na Região Norte do Brasil",
     "logo": {
-      "src": null,
-      "alt": "Conecta Soluções",
+      "src": "assets/img/simbolo.png",
+      "alt": "",
       "focus": "center"
     }
   },
@@ -30,29 +30,107 @@
   },
   "hero": {
     "eyebrow": "Engenharia, Automação e Sistemas Industriais",
-    "title": "Soluções técnicas para instalações industriais na Região Norte",
+    "title": "Soluções técnicas para instalações industriais",
+    "titleAccent": "na Região Norte",
     "text": "Projetos, automação, manutenção e modernização de sistemas elétricos e industriais, da concepção ao suporte técnico.",
     "cta": "Falar pelo WhatsApp",
     "image": {
-      "src": null,
-      "alt": "Painel elétrico de automação industrial com controladores e cabeamento organizado",
+      "src": "assets/img/hero-subestacao.webp",
+      "alt": "Estruturas metálicas e equipamentos de uma subestação de alta tensão",
       "focus": "center"
+    },
+    "detail": {
+      "src": "assets/img/hero-sala-eletrica.webp",
+      "alt": "Sala elétrica com painéis de média tensão alinhados",
+      "focus": "center"
+    },
+    "seal": {
+      "label": "Atendimento",
+      "title": "Região Norte",
+      "text": "do Brasil"
     }
   },
   "about": {
     "eyebrow": "A empresa",
-    "title": "Engenharia e automação aplicadas à operação industrial",
+    "title": "Engenharia e automação",
+    "titleAccent": "aplicadas à operação industrial",
     "text": "A Conecta Soluções presta serviços de engenharia, automação e sistemas industriais na Região Norte do Brasil. Atua em projetos, implantação, modernização e manutenção de sistemas de automação, elétricos e de instrumentação, incluindo a rebobinagem de motores elétricos.",
+    "cta": "Falar com a equipe",
     "image": {
-      "src": null,
-      "alt": "Profissional realizando manutenção em motor elétrico industrial",
+      "src": "assets/img/galeria-motor.webp",
+      "alt": "Estator de motor elétrico com bobinas de cobre durante a rebobinagem",
       "focus": "center"
+    },
+    "gallery": {
+      "scada": {
+        "src": "assets/img/galeria-scada.webp",
+        "alt": "Estação de supervisão com telas de processo de uma central de água gelada",
+        "focus": "center"
+      },
+      "protecao": {
+        "src": "assets/img/galeria-protecao.webp",
+        "alt": "Dispositivos de proteção e controle montados em trilho, com fiação identificada",
+        "focus": "center"
+      },
+      "paineis": {
+        "src": "assets/img/galeria-paineis.webp",
+        "alt": "Painel elétrico com medidores, sinalizadores e chaves de comando",
+        "focus": "center"
+      },
+      "supervisao": {
+        "src": "assets/img/galeria-supervisao.webp",
+        "alt": "Sala de controle com mesa de operação e telas de supervisão",
+        "focus": "center"
+      },
+      "transformador": {
+        "src": "assets/img/galeria-transformador.webp",
+        "alt": "Transformadores de potência instalados em ambiente abrigado",
+        "focus": "center"
+      },
+      "infraestrutura": {
+        "src": "assets/img/galeria-infraestrutura.webp",
+        "alt": "Eletrocalhas e leitos de cabos fixados no teto de uma instalação",
+        "focus": "center"
+      },
+      "subestacao": {
+        "src": "assets/img/galeria-subestacao.webp",
+        "alt": "Transformador de alta tensão no pátio de uma subestação",
+        "focus": "center"
+      }
+    },
+    "facts": {
+      "area": {
+        "label": "Área",
+        "value": "Engenharia e automação"
+      },
+      "regiao": {
+        "label": "Região",
+        "value": "Norte do Brasil"
+      },
+      "servicos": {
+        "label": "Serviços",
+        "value": "21 frentes técnicas"
+      },
+      "ciclo": {
+        "label": "Atuação",
+        "value": "Do projeto ao suporte"
+      },
+      "motores": {
+        "label": "Motores elétricos",
+        "value": "Rebobinagem"
+      },
+      "contato": {
+        "label": "Contato",
+        "value": "Pelo WhatsApp"
+      }
     }
   },
   "services": {
     "eyebrow": "Serviços",
-    "title": "Do projeto à manutenção",
+    "title": "Do projeto",
+    "titleAccent": "à manutenção",
     "intro": "Frentes de atuação em engenharia, automação e sistemas industriais. Para avaliar a sua necessidade, fale com a Conecta Soluções pelo WhatsApp.",
+    "cta": "Consultar um serviço",
     "items": {
       "automacao-industrial": {
         "title": "Automação Industrial"
@@ -121,7 +199,9 @@
   },
   "approach": {
     "eyebrow": "Abordagem",
-    "title": "Atuação técnica e integrada",
+    "title": "Atuação técnica",
+    "titleAccent": "e integrada",
+    "text": "Automação, elétrica e instrumentação tratadas em conjunto, em todas as etapas da vida de uma instalação industrial.",
     "items": {
       "ciclo-completo": {
         "title": "Do projeto ao suporte",
@@ -143,15 +223,23 @@
   },
   "area": {
     "eyebrow": "Área de atuação",
-    "title": "Região Norte do Brasil",
-    "text": "Atendimento a empresas e instalações industriais na Região Norte. Para confirmar a disponibilidade na sua localidade, entre em contato pelo WhatsApp."
+    "title": "Região Norte",
+    "titleAccent": "do Brasil",
+    "text": "Atendimento a empresas e instalações industriais na Região Norte. Para confirmar a disponibilidade na sua localidade, entre em contato pelo WhatsApp.",
+    "cta": "Consultar disponibilidade"
   },
   "contact": {
     "eyebrow": "Contato",
-    "title": "Vamos conversar sobre a sua instalação?",
+    "title": "Vamos conversar sobre",
+    "titleAccent": "a sua instalação?",
     "text": "Envie uma mensagem pelo WhatsApp com uma breve descrição da necessidade e da localidade da instalação.",
     "cta": "Falar pelo WhatsApp",
-    "whatsappLabel": "WhatsApp"
+    "whatsappLabel": "WhatsApp",
+    "image": {
+      "src": "assets/img/contato-planta-industrial.webp",
+      "alt": "Vista aérea de uma planta industrial com tubulações, tanques e estruturas metálicas",
+      "focus": "center"
+    }
   },
   "notFound": {
     "eyebrow": "Erro 404",
@@ -161,20 +249,20 @@
   },
   "theme": {
     "colors": {
-      "background": "#F5F3EE",
-      "surface": "#FBFAF7",
-      "surfaceAlt": "#E9E5DD",
-      "text": "#242722",
-      "textMuted": "#5C5E55",
-      "border": "#D7D4CB",
-      "borderStrong": "#77786F",
-      "primary": "#343E35",
-      "onPrimary": "#F5F3EE",
-      "accent": "#6B5A3E",
-      "dark": "#252B26",
-      "onDark": "#F5F3EE",
-      "onDarkMuted": "#B3B2A7",
-      "accentOnDark": "#C9BFA6"
+      "background": "#F2EDE3",
+      "surface": "#FBF8F2",
+      "surfaceAlt": "#E8DFD0",
+      "text": "#2A1519",
+      "textMuted": "#5F4A4E",
+      "border": "#DDD3C4",
+      "borderStrong": "#8B7B70",
+      "primary": "#9A6A3C",
+      "onPrimary": "#FFFFFF",
+      "accent": "#6B1230",
+      "dark": "#49091D",
+      "onDark": "#FFFFFF",
+      "onDarkMuted": "#E3CFCF",
+      "accentOnDark": "#D9AE7E"
     }
   }
 }

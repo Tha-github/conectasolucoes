@@ -33,9 +33,9 @@ const be32 = (n) => [(n >>> 24) & 255, (n >>> 16) & 255, (n >>> 8) & 255, n & 25
 const png = (w, h) => bytes([0x89], 'PNG\r\n', [0x1a, 0x0a], be32(13), 'IHDR', be32(w), be32(h), [8, 2, 0, 0, 0]);
 
 describe('modelo de edição', () => {
-  test('85 campos editáveis, todos folhas do schema', () => {
+  test('119 campos editáveis, todos folhas do schema', () => {
     const paths = editablePaths();
-    assert.equal(paths.length, 85);
+    assert.equal(paths.length, 119);
     for (const path of paths) assert.ok(['text', 'color', 'image'].includes(fieldAt(path).kind), path);
   });
 
@@ -64,8 +64,15 @@ describe('modelo de edição', () => {
   });
 
   test('rótulos legíveis para mensagens', () => {
-    assert.equal(labelForPath('hero.title'), 'Destaque principal › Título principal');
-    assert.equal(labelForPath('hero.image.alt'), 'Destaque principal › Imagem do destaque › texto alternativo');
+    assert.equal(labelForPath('hero.title'), 'Destaque principal › Título principal (parte em branco)');
+    assert.equal(
+      labelForPath('hero.image.alt'),
+      'Destaque principal › Imagem principal do destaque › texto alternativo',
+    );
+    assert.equal(
+      labelForPath('about.gallery.subestacao'),
+      'Empresa › Mosaico: demais imagens (fixas: 7) › Mosaico: imagem 8',
+    );
     assert.equal(
       labelForPath('services.items.rebobinagem-motores.title'),
       'Serviços › Lista de serviços (fixa: 21 itens) › Serviço 21 › Nome do serviço',
@@ -210,17 +217,17 @@ describe('envio de imagens', () => {
     assert.match(checkOriginalUpload({ size: 18, type: 'image/png' }, truncated, hero()).errors.join(), /corrompido/);
     assert.match(
       checkOriginalUpload({ size: 100, type: 'image/png' }, png(300, 200), hero()).errors.join(),
-      /mínimo 1200×1000/,
+      /mínimo 600×1200/,
     );
   });
 
   test('redimensionamento preserva a proporção e nunca amplia', () => {
-    assert.deepEqual(planResize(4800, 3200, hero()), { width: 2400, height: 1600, resize: true });
-    assert.deepEqual(planResize(3000, 6000, hero()), { width: 1200, height: 2400, resize: true });
-    assert.deepEqual(planResize(1600, 1200, hero()), { width: 1600, height: 1200, resize: false });
+    assert.deepEqual(planResize(4800, 3200, hero()), { width: 900, height: 600, resize: true });
+    assert.deepEqual(planResize(3000, 6000, hero()), { width: 900, height: 1800, resize: true });
+    assert.deepEqual(planResize(800, 1300, hero()), { width: 800, height: 1300, resize: false });
     const { width, height } = planResize(4032, 3024, fieldAt('about.image'));
     assert.ok(Math.abs(width / height - 4032 / 3024) < 0.002, 'mesma proporção');
-    assert.ok(width <= 1800 && height <= 1800);
+    assert.ok(width <= 600 && height <= 800);
   });
 
   test('saída: prefere a otimizada; original só se couber sem redimensionar', () => {
@@ -360,6 +367,16 @@ describe('prévia e página do painel', () => {
   test('build publica dados do painel: templates e manifesto de imagens', () => {
     assert.ok(typeof templates.page === 'string' && templates.page.includes('{{> header}}'));
     assert.ok(templates.partials.header && templates.partials.footer);
-    assert.deepEqual(JSON.parse(readFileSync(join(outDir, 'admin', 'images.json'), 'utf8')), { images: [] });
+    const { images } = JSON.parse(readFileSync(join(outDir, 'admin', 'images.json'), 'utf8'));
+    const listed = new Set(images.map((image) => image.src));
+    walkSchema((field, path) => {
+      if (field.kind !== 'image') return;
+      const { src } = path.split('.').reduce((node, key) => node[key], loadDefaultContent());
+      if (src) assert.ok(listed.has(src), `${path}: ${src} fora do manifesto`);
+    });
+    for (const image of images) {
+      assert.match(image.src, IMAGE_PATH_PATTERN);
+      assert.ok(image.width > 0 && image.height > 0 && image.bytes > 0, image.src);
+    }
   });
 });

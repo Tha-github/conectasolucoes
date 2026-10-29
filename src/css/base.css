@@ -45,17 +45,28 @@ main {
   display: none !important;
 }
 
-/* Títulos: Cormorant Garamond, peso leve, entrelinha curta e tracking fechado */
+/* Títulos: Outfit leve, na cor de título do contexto (vinho no claro, branco no escuro) */
 h1,
 h2,
 h3,
 h4 {
   margin: 0;
+  color: var(--heading-fg);
   font-family: var(--font-display);
   font-weight: var(--weight-heading);
   line-height: var(--leading-tight);
   letter-spacing: var(--tracking-tight);
   text-wrap: balance;
+}
+
+/* Parte em destaque do título: mais pesada e, no escuro, dourada (não depende só da cor) */
+.title-accent {
+  color: var(--heading-accent);
+  font-weight: var(--weight-accent);
+}
+
+.title-accent:empty {
+  display: none;
 }
 
 h1 {

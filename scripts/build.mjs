@@ -44,16 +44,7 @@ export function bundleCss(sources) {
 
 /** Fontes auto-hospedadas (ver src/css/fonts.css), copiadas com suas licenças. */
 const FONTS = [
-  {
-    pkg: '@fontsource-variable/cormorant-garamond',
-    file: 'cormorant-garamond-latin-wght-normal.woff2',
-    license: 'Cormorant-Garamond',
-  },
-  {
-    pkg: '@fontsource-variable/cormorant-garamond',
-    file: 'cormorant-garamond-latin-wght-italic.woff2',
-    license: 'Cormorant-Garamond',
-  },
+  { pkg: '@fontsource-variable/outfit', file: 'outfit-latin-wght-normal.woff2', license: 'Outfit' },
   { pkg: '@fontsource-variable/manrope', file: 'manrope-latin-wght-normal.woff2', license: 'Manrope' },
 ].map((font) => ({ ...font, dir: join(ROOT, 'node_modules', ...font.pkg.split('/')) }));
 
