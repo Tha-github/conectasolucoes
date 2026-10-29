@@ -124,3 +124,5 @@ Windows, e o build recusa o valor.
 - Não há backend. Conteúdo editado no painel só chega ao site público depois de ser integrado ao repositório (Pull
   Request) e publicado de novo. Rascunho e exportação não publicam nada.
 - Domínio personalizado: ainda não informado. Configuração em [`docs/publicacao.md`](docs/publicacao.md) §6.
+
+Endereço publicado: https://tha-github.github.io/conectasolucoes/ (repositório `Tha-github/conectasolucoes`).
