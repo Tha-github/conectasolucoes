@@ -1,0 +1,187 @@
+/*
+ * Tokens de design — Conecta Soluções. Decisões em docs/DESIGN_SYSTEM.md.
+ *
+ * Camadas:
+ *   1. Primitivos de cor: --color-* em css/theme.css, gerado do content.json
+ *      (editáveis pelo painel; contraste validado no build).
+ *   2. Tokens fixos: tipografia, espaço, grid, raios, sombras, movimento,
+ *      cores de estado (não editáveis: carregam significado funcional).
+ *   3. Papéis semânticos (--bg, --fg, --line, --action-*, --focus-color…),
+ *      redefinidos por contexto (.theme-dark). Componentes usam só esta camada.
+ *
+ * Breakpoints (custom properties não funcionam em @media; use os literais):
+ *   sm 40em (640px) · md 64em (1024px) · lg 80em (1280px)
+ */
+
+:root {
+  /* Cores de estado (fixas; sempre acompanhadas de texto ou ícone) */
+  --color-error: #a3261c;
+  --color-success: #1e6b3b;
+  --color-warning: #8a5b00;
+
+  /* Tipografia — famílias. Serifa editorial nos títulos, sans geométrica no texto.
+     Mono só do sistema (códigos no painel): nenhum arquivo extra. */
+  --font-display: 'Cormorant Garamond', Garamond, 'Times New Roman', Georgia, serif;
+  --font-sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+
+  --weight-light: 300;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Peso dos títulos: a Cormorant fica mais elegante leve em tamanhos grandes */
+  --weight-display: var(--weight-regular);
+  --weight-heading: var(--weight-medium);
+
+  /* Escala fluida: valores mínimos em 360px, máximos em 1440px.
+     A Cormorant tem altura-x pequena: os títulos são maiores que numa sans. */
+  --text-2xs: 0.6875rem; /* 11px — rótulos em caixa alta */
+  --text-xs: 0.8125rem; /* 13px */
+  --text-sm: 0.9375rem; /* 15px */
+  --text-base: clamp(1rem, 0.96rem + 0.18vw, 1.0625rem); /* 16–17px */
+  --text-lg: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem); /* 17–20px */
+  --text-xl: clamp(1.375rem, 1.2rem + 0.75vw, 1.875rem); /* 22–30px */
+  --text-2xl: clamp(1.75rem, 1.4rem + 1.5vw, 2.75rem); /* 28–44px */
+  --text-3xl: clamp(2.375rem, 1.7rem + 3vw, 4.375rem); /* 38–70px */
+  --text-4xl: clamp(2.75rem, 1.7rem + 4.6vw, 6rem); /* 44–96px */
+  --text-display: clamp(3.25rem, 1.6rem + 7.4vw, 7rem); /* 52–112px */
+
+  --leading-display: 0.98;
+  --leading-tight: 1.04;
+  --leading-snug: 1.3;
+  --leading-normal: 1.7;
+
+  --tracking-display: -0.022em;
+  --tracking-tight: -0.012em;
+  --tracking-normal: 0;
+  --tracking-label: 0.2em;
+  --tracking-button: 0.14em;
+
+  /* Espaçamento (base 4px) */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
+  --space-11: 10rem;
+  --space-section: clamp(5rem, 3rem + 7vw, var(--space-11));
+
+  /* Containers */
+  --width-prose: 62ch;
+  --width-narrow: 48rem;
+  --width-content: 80rem;
+  --width-wide: 96rem;
+  --gutter: clamp(1.25rem, 0.6rem + 3.6vw, 4.5rem);
+
+  /* Grid: 4 colunas (mobile) → 8 (≥ 40em) → 12 (≥ 64em) */
+  --grid-columns: 4;
+  --grid-gap: clamp(var(--space-4), 0.75rem + 1.2vw, var(--space-6));
+
+  /* Proporções de imagem */
+  --ratio-panorama: 21 / 9;
+  --ratio-wide: 16 / 9;
+  --ratio-landscape: 3 / 2;
+  --ratio-portrait: 4 / 5;
+  --ratio-square: 1 / 1;
+
+  /* Raios: arestas retas, como em pranchas de arquitetura */
+  --radius-xs: 2px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-pill: 999px;
+  --radius-control: 0;
+
+  /* Bordas */
+  --border-width: 1px;
+  --border-width-strong: 2px;
+
+  /* Sombras: uso mínimo; a hierarquia vem de linhas e espaço */
+  --shadow-sm: 0 1px 2px rgb(37 43 38 / 0.06);
+  --shadow-md: 0 8px 24px rgb(37 43 38 / 0.08);
+  --shadow-lg: 0 24px 64px rgb(37 43 38 / 0.16);
+
+  /* Controles (alvo mínimo de toque 44px) */
+  --control-height: 3.25rem;
+  --control-height-sm: 2.75rem;
+
+  /* Foco */
+  --focus-width: 3px;
+  --focus-offset: 3px;
+
+  /* Movimento */
+  --duration-fast: 160ms;
+  --duration-base: 280ms;
+  --duration-slow: 700ms;
+  --ease-out: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* Cabeçalho fixo (também usado como recuo das âncoras) */
+  --header-height: 4.5rem;
+
+  /* Camadas */
+  --z-header: 50;
+  --z-skip: 100;
+
+  /* Breakpoints (referência para JS via getComputedStyle) */
+  --bp-sm: 40em;
+  --bp-md: 64em;
+  --bp-lg: 80em;
+}
+
+@media (min-width: 40em) {
+  :root {
+    --grid-columns: 8;
+  }
+}
+
+@media (min-width: 64em) {
+  :root {
+    --grid-columns: 12;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-slow: 0ms;
+  }
+}
+
+/* Papéis semânticos — contexto claro (padrão) */
+:root,
+.theme-light {
+  --bg: var(--color-background);
+  --bg-raised: var(--color-surface);
+  --bg-sunken: var(--color-surface-alt);
+  --fg: var(--color-text);
+  --fg-muted: var(--color-text-muted);
+  --line: var(--color-border);
+  --line-strong: var(--color-border-strong);
+  --accent-fg: var(--color-accent);
+  --action-bg: var(--color-primary);
+  --action-fg: var(--color-on-primary);
+  --focus-color: var(--color-primary);
+}
+
+/* Contexto escuro (rodapé e seções de contraste) */
+.theme-dark {
+  --bg: var(--color-dark);
+  --bg-raised: color-mix(in srgb, var(--color-on-dark) 6%, var(--color-dark));
+  --bg-sunken: color-mix(in srgb, var(--color-on-dark) 3%, var(--color-dark));
+  --fg: var(--color-on-dark);
+  --fg-muted: var(--color-on-dark-muted);
+  --line: color-mix(in srgb, var(--color-on-dark) 18%, var(--color-dark));
+  --line-strong: color-mix(in srgb, var(--color-on-dark) 50%, var(--color-dark));
+  --accent-fg: var(--color-accent-on-dark);
+  --action-bg: var(--color-on-dark);
+  --action-fg: var(--color-dark);
+  --focus-color: var(--color-accent-on-dark);
+}

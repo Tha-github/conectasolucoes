@@ -1,0 +1,185 @@
+/* Reset, tipografia de elementos, foco e movimento. */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  color-scheme: light;
+  /* Âncoras não ficam escondidas sob o cabeçalho fixo */
+  scroll-padding-top: calc(var(--header-height) + var(--space-4));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  font-kerning: normal;
+  font-feature-settings: 'kern', 'liga';
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+main {
+  flex: 1;
+}
+
+/* O atributo hidden sempre oculta, mesmo em componentes com display próprio. */
+[hidden] {
+  display: none !important;
+}
+
+/* Títulos: Cormorant Garamond, peso leve, entrelinha curta e tracking fechado */
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: var(--weight-heading);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: var(--text-4xl);
+  font-weight: var(--weight-display);
+  letter-spacing: var(--tracking-display);
+}
+
+h2 {
+  font-weight: var(--weight-display);
+}
+
+h2 {
+  font-size: var(--text-3xl);
+}
+
+h3 {
+  font-size: var(--text-2xl);
+}
+
+h4 {
+  font-size: var(--text-xl);
+  line-height: var(--leading-snug);
+}
+
+p,
+ul,
+ol,
+figure,
+blockquote {
+  margin: 0;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+strong,
+b {
+  font-weight: var(--weight-semibold);
+}
+
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+hr {
+  height: 0;
+  margin: 0;
+  border: 0;
+  border-top: var(--border-width) solid var(--line);
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-on-primary);
+}
+
+/* Links em texto: sublinhado sempre presente (estado não depende só de cor) */
+a {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-color: var(--accent-fg);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  transition: text-decoration-thickness var(--duration-fast) var(--ease-out);
+}
+
+@media (hover: hover) {
+  a:hover {
+    text-decoration-thickness: 2px;
+  }
+}
+
+/* Foco: anel sólido de 3px com afastamento, cor por contexto (≥ 3:1) */
+:focus-visible {
+  outline: var(--focus-width) solid var(--focus-color);
+  outline-offset: var(--focus-offset);
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Elementos que recebem foco só programaticamente (ex.: <main> via skip link) */
+[tabindex='-1']:focus {
+  outline: none;
+}
+
+/* Movimento reduzido: anula transições e animações em qualquer componente */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Animações compartilhadas (aplicadas só dentro de prefers-reduced-motion: no-preference) */
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+}
+
+@keyframes reveal-down {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+}
+
+/* Fotografia: surge com leve aproximação (escala ≤ 4%, sem deslocamento) */
+@keyframes reveal-media {
+  from {
+    opacity: 0;
+    transform: scale(1.04);
+  }
+}

@@ -1,0 +1,25 @@
+    <a class="skip-link" href="#conteudo">{{content.a11y.skipLink}}</a>
+    <header class="site-header">
+      <div class="container site-header__inner">
+        <a class="brand" href="{{build.root}}">
+          {{image content.brand.logo width=200 height=56 class=brand__logo loading=eager}}
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-principal">
+          <span class="nav-toggle__bars" aria-hidden="true"></span>
+          <span>{{content.nav.menu}}</span>
+        </button>
+        <nav class="site-nav" id="menu-principal" aria-label="{{content.nav.label}}">
+          <ul class="site-nav__list">
+            <li><a class="site-nav__link" href="#sobre">{{content.nav.about}}</a></li>
+            <li><a class="site-nav__link" href="#servicos">{{content.nav.services}}</a></li>
+            <li><a class="site-nav__link" href="#abordagem">{{content.nav.approach}}</a></li>
+            <li><a class="site-nav__link" href="#atuacao">{{content.nav.area}}</a></li>
+            <li><a class="site-nav__link" href="#contato">{{content.nav.contact}}</a></li>
+          </ul>
+          <a class="button button--secondary button--sm site-nav__cta" href="{{build.whatsappUrl}}" target="_blank" rel="noopener noreferrer">
+            {{> icon-message}}
+            <span>{{content.nav.cta}}<span class="visually-hidden"> {{content.a11y.newTab}}</span></span>
+          </a>
+        </nav>
+      </div>
+    </header>

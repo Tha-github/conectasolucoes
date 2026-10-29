@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+{{> head}}
+    <title>{{content.meta.title}}</title>
+    <meta name="description" content="{{content.meta.description}}">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="pt_BR">
+    <meta property="og:site_name" content="{{content.brand.name}}">
+    <meta property="og:title" content="{{content.meta.title}}">
+    <meta property="og:description" content="{{content.meta.description}}">
+    <meta name="twitter:title" content="{{content.meta.title}}">
+    <meta name="twitter:description" content="{{content.meta.description}}">
+  </head>
+  <body>
+{{> header}}
+    <main id="conteudo" tabindex="-1">
+      <section class="hero" id="inicio" aria-labelledby="inicio-titulo">
+        <div class="hero__grid">
+          <div class="hero__text">
+            <p class="eyebrow">{{content.hero.eyebrow}}</p>
+            <h1 class="hero__title" id="inicio-titulo">{{content.hero.title}}</h1>
+            <p class="lead">{{content.hero.text}}</p>
+            <a class="button button--primary" href="{{build.whatsappUrl}}" target="_blank" rel="noopener noreferrer">
+              {{> icon-message}}
+              <span>{{content.hero.cta}}<span class="visually-hidden"> {{content.a11y.newTab}}</span></span>
+            </a>
+          </div>
+          <figure class="media hero__media">
+            {{image content.hero.image width=1200 height=1500 class=media__img loading=eager fetchpriority=high}}
+          </figure>
+        </div>
+      </section>
+
+      <section class="section about" id="sobre" aria-labelledby="sobre-titulo">
+        <div class="container about__grid">
+          <figure class="media about__media">
+            {{image content.about.image width=1500 height=1000 class=media__img}}
+          </figure>
+          <div class="about__text">
+            <p class="eyebrow">{{content.about.eyebrow}}</p>
+            <h2 id="sobre-titulo">{{content.about.title}}</h2>
+            <p class="about__body">{{content.about.text}}</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section services" id="servicos" aria-labelledby="servicos-titulo">
+        <div class="container services__grid">
+          <header class="section__header">
+            <p class="eyebrow">{{content.services.eyebrow}}</p>
+            <h2 id="servicos-titulo">{{content.services.title}}</h2>
+            <p class="lead">{{content.services.intro}}</p>
+          </header>
+          <ol class="service-list">
+            <li class="service-list__item" data-service="automacao-industrial">{{content.services.items.automacao-industrial.title}}</li>
+            <li class="service-list__item" data-service="automacao-cag-hvac">{{content.services.items.automacao-cag-hvac.title}}</li>
+            <li class="service-list__item" data-service="automacao-subestacoes">{{content.services.items.automacao-subestacoes.title}}</li>
+            <li class="service-list__item" data-service="sistemas-scada">{{content.services.items.sistemas-scada.title}}</li>
+            <li class="service-list__item" data-service="clp-plc-ihm">{{content.services.items.clp-plc-ihm.title}}</li>
+            <li class="service-list__item" data-service="inversores-frequencia">{{content.services.items.inversores-frequencia.title}}</li>
+            <li class="service-list__item" data-service="instrumentacao-industrial">{{content.services.items.instrumentacao-industrial.title}}</li>
+            <li class="service-list__item" data-service="redes-industriais">{{content.services.items.redes-industriais.title}}</li>
+            <li class="service-list__item" data-service="fibra-optica-industrial">{{content.services.items.fibra-optica-industrial.title}}</li>
+            <li class="service-list__item" data-service="paineis-eletricos-automacao">{{content.services.items.paineis-eletricos-automacao.title}}</li>
+            <li class="service-list__item" data-service="retrofit-modernizacao">{{content.services.items.retrofit-modernizacao.title}}</li>
+            <li class="service-list__item" data-service="manutencao-preventiva-corretiva">{{content.services.items.manutencao-preventiva-corretiva.title}}</li>
+            <li class="service-list__item" data-service="termografia-inspecoes">{{content.services.items.termografia-inspecoes.title}}</li>
+            <li class="service-list__item" data-service="eficiencia-energetica">{{content.services.items.eficiencia-energetica.title}}</li>
+            <li class="service-list__item" data-service="projetos-engenharia">{{content.services.items.projetos-engenharia.title}}</li>
+            <li class="service-list__item" data-service="laudos-documentacao">{{content.services.items.laudos-documentacao.title}}</li>
+            <li class="service-list__item" data-service="comissionamento-startup">{{content.services.items.comissionamento-startup.title}}</li>
+            <li class="service-list__item" data-service="monitoramento-remoto-telemetria">{{content.services.items.monitoramento-remoto-telemetria.title}}</li>
+            <li class="service-list__item" data-service="integracao-sistemas">{{content.services.items.integracao-sistemas.title}}</li>
+            <li class="service-list__item" data-service="treinamento-suporte">{{content.services.items.treinamento-suporte.title}}</li>
+            <li class="service-list__item" data-service="rebobinagem-motores">{{content.services.items.rebobinagem-motores.title}}</li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="section section--alt approach" id="abordagem" aria-labelledby="abordagem-titulo">
+        <div class="container">
+          <header class="section__header">
+            <p class="eyebrow">{{content.approach.eyebrow}}</p>
+            <h2 id="abordagem-titulo">{{content.approach.title}}</h2>
+          </header>
+          <ol class="approach-list">
+            <li class="approach-list__item" data-approach="ciclo-completo">
+              <h3 class="approach-list__title">{{content.approach.items.ciclo-completo.title}}</h3>
+              <p>{{content.approach.items.ciclo-completo.text}}</p>
+            </li>
+            <li class="approach-list__item" data-approach="visao-integrada">
+              <h3 class="approach-list__title">{{content.approach.items.visao-integrada.title}}</h3>
+              <p>{{content.approach.items.visao-integrada.text}}</p>
+            </li>
+            <li class="approach-list__item" data-approach="modernizacao">
+              <h3 class="approach-list__title">{{content.approach.items.modernizacao.title}}</h3>
+              <p>{{content.approach.items.modernizacao.text}}</p>
+            </li>
+            <li class="approach-list__item" data-approach="registro-tecnico">
+              <h3 class="approach-list__title">{{content.approach.items.registro-tecnico.title}}</h3>
+              <p>{{content.approach.items.registro-tecnico.text}}</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="section theme-dark area" id="atuacao" aria-labelledby="atuacao-titulo">
+        <div class="container area__grid">
+          <p class="eyebrow">{{content.area.eyebrow}}</p>
+          <h2 class="area__title" id="atuacao-titulo">{{content.area.title}}</h2>
+          <p class="lead area__text">{{content.area.text}}</p>
+        </div>
+      </section>
+
+      <section class="section contact" id="contato" aria-labelledby="contato-titulo">
+        <div class="container contact__grid">
+          <div class="contact__text">
+            <p class="eyebrow">{{content.contact.eyebrow}}</p>
+            <h2 id="contato-titulo">{{content.contact.title}}</h2>
+            <p class="lead">{{content.contact.text}}</p>
+          </div>
+          <div class="contact__action">
+            <a class="button button--primary button--lg" href="{{build.whatsappUrl}}" target="_blank" rel="noopener noreferrer">
+              {{> icon-message}}
+              <span>{{content.contact.cta}}<span class="visually-hidden"> {{content.a11y.newTab}}</span></span>
+            </a>
+            <p class="contact__number">
+              <span class="contact__label">{{content.contact.whatsappLabel}}</span>
+              <a href="{{build.whatsappUrl}}" target="_blank" rel="noopener noreferrer">{{build.whatsappDisplay}}<span class="visually-hidden"> {{content.a11y.newTab}}</span></a>
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+{{> footer}}
+  </body>
+</html>

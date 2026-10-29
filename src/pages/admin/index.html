@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' blob:; img-src 'self' blob:; font-src 'self'; connect-src 'self'; frame-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'">
+    <meta name="referrer" content="no-referrer">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="color-scheme" content="light">
+    <title>Painel de conteúdo | {{content.brand.name}}</title>
+    <link rel="stylesheet" href="{{build.root}}css/fonts.css">
+    <link rel="stylesheet" href="{{build.root}}css/theme.css">
+    <link rel="stylesheet" href="{{build.root}}css/tokens.css">
+    <link rel="stylesheet" href="{{build.root}}css/base.css">
+    <link rel="stylesheet" href="{{build.root}}css/layout.css">
+    <link rel="stylesheet" href="{{build.root}}css/components.css">
+    <link rel="stylesheet" href="{{build.root}}css/admin.css">
+    <script type="module" src="{{build.root}}js/admin/main.js"></script>
+  </head>
+  <body class="admin">
+    <a class="skip-link" href="#editor">Pular para o editor</a>
+
+    <header class="admin-bar">
+      <div class="admin-bar__inner">
+        <div class="admin-bar__title">
+          <p class="eyebrow">Painel de conteúdo</p>
+          <h1 class="admin-bar__name">{{content.brand.name}}</h1>
+        </div>
+        <ul class="admin-status" id="status" role="status" aria-live="polite">
+          <li class="admin-status__item">Carregando conteúdo…</li>
+        </ul>
+        <div class="admin-bar__actions">
+          <button type="button" class="button button--primary button--sm" data-action="save" disabled>Salvar rascunho</button>
+          <button type="button" class="button button--secondary button--sm" data-action="export" disabled>Exportar JSON</button>
+          <button type="button" class="button button--secondary button--sm" data-action="import" disabled>Importar JSON</button>
+          <button type="button" class="button button--secondary button--sm" data-action="reset" disabled>Restaurar padrão</button>
+          <input type="file" id="import-file" class="visually-hidden" accept=".json,application/json" tabindex="-1" aria-hidden="true">
+        </div>
+      </div>
+    </header>
+
+    <div class="admin-notice">
+      <div class="admin-notice__inner">
+        <p>
+          <strong>Este painel não publica o site.</strong>
+          Salvar guarda um rascunho só neste navegador; exportar gera um arquivo; publicar exige integrar o arquivo ao
+          repositório e fazer um novo deploy. <a href="#como-publicar">Como publicar</a>
+        </p>
+        <p>
+          <strong>Página pública, sem senha.</strong>
+          Qualquer pessoa com o endereço pode abri-la; ela altera dados apenas no navegador de quem a usa.
+          Não insira informações confidenciais.
+        </p>
+      </div>
+    </div>
+
+    <div class="admin-messages" id="messages"></div>
+
+    <main class="admin-layout">
+      <aside class="admin-sidebar" aria-labelledby="sidebar-title">
+        <p class="admin-sidebar__title" id="sidebar-title">Áreas do site</p>
+        <nav class="admin-groups" id="group-nav" aria-label="Áreas do site"></nav>
+        <p class="admin-sidebar__hint">O número ao lado de uma área indica quantos campos foram alterados em relação ao site publicado.</p>
+      </aside>
+
+      <section class="admin-editor" id="editor" tabindex="-1" aria-labelledby="editor-title">
+        <h2 class="visually-hidden" id="editor-title">Campos editáveis</h2>
+        <form class="admin-form" id="editor-form" novalidate>
+          <p class="admin-loading" id="loading">Carregando conteúdo…</p>
+          <noscript><p class="admin-loading">O painel precisa de JavaScript ativado.</p></noscript>
+        </form>
+      </section>
+
+      <section class="admin-preview" id="previa" aria-labelledby="preview-title">
+        <div class="admin-preview__bar">
+          <h2 class="admin-preview__title" id="preview-title">Prévia</h2>
+          <div class="admin-preview__sizes" role="group" aria-label="Largura da prévia">
+            <button type="button" class="admin-chip" data-preview-width="390" aria-pressed="false">Celular</button>
+            <button type="button" class="admin-chip" data-preview-width="768" aria-pressed="false">Tablet</button>
+            <button type="button" class="admin-chip" data-preview-width="full" aria-pressed="true">Largura total</button>
+          </div>
+        </div>
+        <p class="admin-preview__hint">Mostra o rascunho atual. Campos com erro aparecem com o valor publicado.</p>
+        <div class="admin-preview__viewport">
+          <iframe class="admin-preview__frame" id="preview" title="Prévia do site com as alterações" sandbox="allow-same-origin"></iframe>
+        </div>
+      </section>
+    </main>
+
+    <section class="admin-help" id="como-publicar" aria-labelledby="help-title">
+      <div class="admin-help__inner">
+        <h2 id="help-title">Salvar, exportar e publicar</h2>
+        <ol class="admin-help__steps">
+          <li>
+            <h3>Salvar rascunho</h3>
+            <p>Guarda as alterações apenas neste navegador, neste computador. Ninguém mais vê. Limpar os dados do navegador apaga o rascunho.</p>
+          </li>
+          <li>
+            <h3>Exportar JSON</h3>
+            <p>Baixa um arquivo com todo o conteúdo validado. Se você trocou imagens, baixe também os arquivos de imagem indicados. Envie tudo ao responsável técnico.</p>
+          </li>
+          <li>
+            <h3>Publicar</h3>
+            <p>Quem tem acesso ao repositório no GitHub envia o <code>content.json</code> (e as imagens) numa branch <code>conteudo/…</code> e abre um Pull Request. O GitHub valida tudo automaticamente; depois do merge, o site é publicado. Sem esse acesso, envie os arquivos ao responsável técnico. Só então os visitantes veem as mudanças.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <dialog class="admin-dialog" id="confirm-dialog" aria-labelledby="confirm-title" aria-describedby="confirm-text">
+      <h2 class="admin-dialog__title" id="confirm-title"></h2>
+      <p id="confirm-text"></p>
+      <div class="admin-dialog__actions">
+        <button type="button" class="button button--secondary button--sm" data-choice="export">Exportar antes</button>
+        <button type="button" class="button button--primary button--sm" data-choice="confirm"></button>
+        <button type="button" class="button button--secondary button--sm" data-choice="cancel">Cancelar</button>
+      </div>
+    </dialog>
+
+    <dialog class="admin-dialog admin-dialog--wide" id="image-dialog" aria-labelledby="image-dialog-title" aria-describedby="image-dialog-info">
+      <h2 class="admin-dialog__title" id="image-dialog-title">Substituir imagem</h2>
+      <p class="admin-dialog__info" id="image-dialog-info"></p>
+      <div class="admin-frames" id="image-dialog-frames" aria-label="Prévia nas molduras do site" role="group"></div>
+      <fieldset class="admin-focus-group" id="image-dialog-focus">
+        <legend class="field__label">Enquadramento (qual parte da foto fica visível quando a moldura corta)</legend>
+        <div class="admin-focus"></div>
+      </fieldset>
+      <div class="field">
+        <div class="admin-field__head">
+          <label class="field__label" for="image-dialog-alt">Texto alternativo (descreva a imagem)</label>
+          <span class="admin-field__count" id="image-dialog-alt-contador"></span>
+        </div>
+        <input class="field__control" id="image-dialog-alt" type="text" autocomplete="off" aria-describedby="image-dialog-alt-contador image-dialog-alt-erro">
+        <p class="field__message field__message--error" id="image-dialog-alt-erro" hidden></p>
+      </div>
+      <div class="admin-dialog__actions">
+        <button type="button" class="button button--primary button--sm" data-image-choice="apply">Aplicar ao rascunho</button>
+        <button type="button" class="button button--secondary button--sm" data-image-choice="cancel">Cancelar</button>
+      </div>
+    </dialog>
+
+    <p class="visually-hidden" id="busy" role="status" aria-live="polite"></p>
+  </body>
+</html>

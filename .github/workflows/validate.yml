@@ -1,0 +1,48 @@
+name: Validar
+
+# Roda em todo Pull Request para a main. É o status check obrigatório do
+# ruleset (.github/rulesets/proteger-main.json): sem ele verde, não há merge.
+# Somente leitura: não publica nada e não usa segredos.
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validar-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  validar:
+    name: validar
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      BASE_REF: ${{ github.base_ref }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      # PRs de conteúdo (branch conteudo/*) só podem tocar content/content.json e imagens referenciadas.
+      - name: Escopo do PR de conteúdo
+        if: startsWith(github.head_ref, 'conteudo/')
+        run: node scripts/check-content-scope.mjs "origin/$BASE_REF"
+
+      - name: Conteúdo, imagens e política editorial
+        run: npm run validate:publish -- --base "origin/$BASE_REF"
+
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build

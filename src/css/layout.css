@@ -1,0 +1,82 @@
+/* Containers, grid, seções e utilitários de layout. */
+
+.container {
+  width: 100%;
+  max-width: calc(var(--width-content) + 2 * var(--gutter));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.container--narrow {
+  max-width: calc(var(--width-narrow) + 2 * var(--gutter));
+}
+
+.container--wide {
+  max-width: calc(var(--width-wide) + 2 * var(--gutter));
+}
+
+/* Grid de 4/8/12 colunas; filhos ocupam a linha toda por padrão */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+  gap: var(--grid-gap);
+}
+
+.grid > * {
+  grid-column: 1 / -1;
+}
+
+/* Fluxo vertical uniforme entre filhos */
+.stack > * + * {
+  margin-top: var(--stack-space, var(--space-4));
+}
+
+.stack--sm {
+  --stack-space: var(--space-2);
+}
+
+.stack--lg {
+  --stack-space: var(--space-6);
+}
+
+/* Seção: espaço vertical generoso; o tema define fundo e texto */
+.section {
+  padding-block: var(--space-section);
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.section--flush-top {
+  padding-top: 0;
+}
+
+/* Faixa em superfície alternativa (contraste de texto validado no schema) */
+.section--alt {
+  --bg: var(--color-surface-alt);
+  --bg-sunken: var(--color-background);
+}
+
+.section__header {
+  display: grid;
+  gap: var(--space-4);
+  max-width: var(--width-narrow);
+  margin-bottom: clamp(var(--space-6), 2rem + 2vw, var(--space-8));
+}
+
+/* Tema escuro aplicado a um bloco */
+.theme-dark {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}

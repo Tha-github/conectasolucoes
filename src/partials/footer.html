@@ -1,0 +1,16 @@
+    <footer class="site-footer theme-dark">
+      <div class="container site-footer__grid">
+        <div class="site-footer__brand">
+          <p class="site-footer__name">{{content.brand.name}}</p>
+          <p>{{content.brand.tagline}}</p>
+        </div>
+        <div class="site-footer__contact">
+          <p>{{content.brand.region}}</p>
+          <p>
+            {{content.contact.whatsappLabel}}:
+            <a href="{{build.whatsappUrl}}" target="_blank" rel="noopener noreferrer">{{build.whatsappDisplay}}<span class="visually-hidden"> {{content.a11y.newTab}}</span></a>
+          </p>
+        </div>
+        <p class="site-footer__legal">© {{build.year}} {{content.brand.name}}</p>
+      </div>
+    </footer>

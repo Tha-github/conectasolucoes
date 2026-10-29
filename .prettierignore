@@ -1,0 +1,9 @@
+dist/
+node_modules/
+package-lock.json
+# Templates com marcações {{...}}: a formatação automática quebraria a sintaxe.
+src/pages/
+src/partials/
+# Regras do cliente: mantidas exatamente como fornecidas.
+CLAUDE.md
+.claude/

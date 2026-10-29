@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 1,
+  "meta": {
+    "title": "Conecta Soluções | Engenharia, Automação e Sistemas Industriais",
+    "description": "Engenharia, automação e sistemas industriais na Região Norte do Brasil. Fale com a Conecta Soluções pelo WhatsApp."
+  },
+  "brand": {
+    "name": "Conecta Soluções",
+    "tagline": "Engenharia, Automação e Sistemas Industriais",
+    "region": "Atendimento na Região Norte do Brasil",
+    "logo": {
+      "src": null,
+      "alt": "Conecta Soluções"
+    }
+  },
+  "a11y": {
+    "skipLink": "Pular para o conteúdo",
+    "newTab": "(abre em nova aba)"
+  },
+  "nav": {
+    "label": "Navegação principal",
+    "menu": "Menu",
+    "about": "Empresa",
+    "services": "Serviços",
+    "approach": "Abordagem",
+    "area": "Atuação",
+    "contact": "Contato",
+    "cta": "WhatsApp"
+  },
+  "hero": {
+    "eyebrow": "Engenharia, Automação e Sistemas Industriais",
+    "title": "Soluções técnicas para instalações industriais na Região Norte",
+    "text": "Projetos, automação, manutenção e modernização de sistemas elétricos e industriais, da concepção ao suporte técnico.",
+    "cta": "Falar pelo WhatsApp",
+    "image": {
+      "src": null,
+      "alt": "Painel elétrico de automação industrial com controladores e cabeamento organizado"
+    }
+  },
+  "about": {
+    "eyebrow": "A empresa",
+    "title": "Engenharia e automação aplicadas à operação industrial",
+    "text": "A Conecta Soluções presta serviços de engenharia, automação e sistemas industriais na Região Norte do Brasil. Atua em projetos, implantação, modernização e manutenção de sistemas de automação, elétricos e de instrumentação, incluindo a rebobinagem de motores elétricos.",
+    "image": {
+      "src": null,
+      "alt": "Profissional realizando manutenção em motor elétrico industrial"
+    }
+  },
+  "services": {
+    "eyebrow": "Serviços",
+    "title": "Do projeto à manutenção",
+    "intro": "Frentes de atuação em engenharia, automação e sistemas industriais. Para avaliar a sua necessidade, fale com a Conecta Soluções pelo WhatsApp.",
+    "items": {
+      "automacao-industrial": {
+        "title": "Automação Industrial"
+      },
+      "automacao-cag-hvac": {
+        "title": "Automação de CAG / HVAC"
+      },
+      "automacao-subestacoes": {
+        "title": "Automação de Subestações"
+      },
+      "sistemas-scada": {
+        "title": "Sistemas SCADA"
+      },
+      "clp-plc-ihm": {
+        "title": "CLP / PLC / IHM"
+      },
+      "inversores-frequencia": {
+        "title": "Inversores de Frequência"
+      },
+      "instrumentacao-industrial": {
+        "title": "Instrumentação Industrial"
+      },
+      "redes-industriais": {
+        "title": "Redes Industriais"
+      },
+      "fibra-optica-industrial": {
+        "title": "Fibra Óptica Industrial"
+      },
+      "paineis-eletricos-automacao": {
+        "title": "Painéis Elétricos e Automação"
+      },
+      "retrofit-modernizacao": {
+        "title": "Retrofit e Modernização"
+      },
+      "manutencao-preventiva-corretiva": {
+        "title": "Manutenção Preventiva e Corretiva"
+      },
+      "termografia-inspecoes": {
+        "title": "Termografia e Inspeções Técnicas"
+      },
+      "eficiencia-energetica": {
+        "title": "Eficiência Energética"
+      },
+      "projetos-engenharia": {
+        "title": "Projetos e Engenharia"
+      },
+      "laudos-documentacao": {
+        "title": "Laudos e Documentação Técnica"
+      },
+      "comissionamento-startup": {
+        "title": "Comissionamento e Startup"
+      },
+      "monitoramento-remoto-telemetria": {
+        "title": "Monitoramento Remoto / Telemetria"
+      },
+      "integracao-sistemas": {
+        "title": "Integração de Sistemas"
+      },
+      "treinamento-suporte": {
+        "title": "Treinamento e Suporte Técnico"
+      },
+      "rebobinagem-motores": {
+        "title": "Rebobinagem de Motores Elétricos"
+      }
+    }
+  },
+  "approach": {
+    "eyebrow": "Abordagem",
+    "title": "Atuação técnica e integrada",
+    "items": {
+      "ciclo-completo": {
+        "title": "Do projeto ao suporte",
+        "text": "Atuação nas diferentes etapas: projeto e engenharia, comissionamento e startup, manutenção, treinamento e suporte técnico."
+      },
+      "visao-integrada": {
+        "title": "Visão integrada",
+        "text": "Automação, painéis elétricos, instrumentação, redes industriais e sistemas de supervisão tratados como partes de uma mesma instalação."
+      },
+      "modernizacao": {
+        "title": "Modernização do que já existe",
+        "text": "Retrofit de sistemas, aplicação de inversores de frequência e ações de eficiência energética em instalações em operação."
+      },
+      "registro-tecnico": {
+        "title": "Registro técnico",
+        "text": "Laudos, inspeções termográficas e documentação técnica para apoiar a manutenção e as decisões sobre a instalação."
+      }
+    }
+  },
+  "area": {
+    "eyebrow": "Área de atuação",
+    "title": "Região Norte do Brasil",
+    "text": "Atendimento a empresas e instalações industriais na Região Norte. Para confirmar a disponibilidade na sua localidade, entre em contato pelo WhatsApp."
+  },
+  "contact": {
+    "eyebrow": "Contato",
+    "title": "Vamos conversar sobre a sua instalação?",
+    "text": "Envie uma mensagem pelo WhatsApp com uma breve descrição da necessidade e da localidade da instalação.",
+    "cta": "Falar pelo WhatsApp",
+    "whatsappLabel": "WhatsApp"
+  },
+  "notFound": {
+    "eyebrow": "Erro 404",
+    "title": "Página não encontrada",
+    "text": "O endereço acessado não existe ou foi alterado.",
+    "cta": "Voltar para a página inicial"
+  },
+  "theme": {
+    "colors": {
+      "background": "#F4F2EE",
+      "surface": "#FFFFFF",
+      "surfaceAlt": "#E8E5DF",
+      "text": "#121417",
+      "textMuted": "#4B5158",
+      "border": "#D2CEC6",
+      "borderStrong": "#767B82",
+      "primary": "#173B4C",
+      "onPrimary": "#FFFFFF",
+      "accent": "#A44A22",
+      "dark": "#101316",
+      "onDark": "#ECE9E3",
+      "onDarkMuted": "#A7ADB3",
+      "accentOnDark": "#E09A70"
+    }
+  }
+}
